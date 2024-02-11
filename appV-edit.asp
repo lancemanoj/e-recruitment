@@ -115,7 +115,7 @@ dim obj_int_select_Cmd10
  obj_int_select_Cmd10.ActiveConnection = rsys_int_select
 '<<--Modified by Interface on 05/01/2007
 '22 Feb 16 LJL/MC Add emergency resource avail dates for WHO specific VNs
-gVTextsql = "SELECT i_1, i_3, i_4, i_5, i_7, i_8, i_9, i_11, i_12, i_13, i_14, i_15, i_18, i_19, i_20, I_32, i_33, i_34, i_40, i_44, i_45, I_46, i_47, i_48, i_50, i_55, i_61, i_62, i_64, i_70, i_71, i_72, i_80, i_81, i_82, i_83, i_84, i_text1, i_text2, i_text3,i_94,i_95,i_96  FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'V' "
+gVTextsql = "SELECT i_1, i_3, i_4, i_5, i_7, i_8, i_9, i_11, i_12, i_13, i_14, i_15, i_18, i_19, i_20, I_32, i_33, i_34, i_40, i_44, i_45, I_46, i_47, i_48, i_50, i_55, i_61, i_62, i_64, i_70, i_71, i_72, i_80, i_81, i_82, i_83, i_84, i_text1, i_text2, i_text3,i_94,i_95,i_96,i_97,i_98  FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'V' "
 obj_int_select_Cmd10.CommandText = gVTextsql
 Set gVText = obj_int_select_Cmd10.Execute(,Array(session("template_org_code"),session("lng")))
 '-->>
@@ -168,7 +168,7 @@ If Request.form("GOEDITV") = "99" then
 '<<--Modified by Interface on 06/11/2007
  set obj_db_CmdI = server.CreateObject("adodb.command")
  obj_db_CmdI.ActiveConnection = rsys_db
- updFootersql = "UPDATE td_rsys_cand SET cand_fil_d = getdate(), cand_fil_t = ?, cand_ipa_c = ?, cand_law_i = ?, cand_law_m = ?, cand_verif_ip_c = ?, cand_verif_name_t = ?, user_id_t = ?,cand_dismissed_i =? ,cand_dismissed_m =?, cand_resigned_i =?, cand_resigned_m =?, cand_nameinclude_i =?,cand_nameinclude_UN =? , upd_d = getdate() WHERE cand_id_c = ?"
+ updFootersql = "UPDATE td_rsys_cand SET cand_fil_d = getdate(), cand_fil_t = ?, cand_ipa_c = ?, cand_law_i = ?, cand_law_m = ?, cand_verif_ip_c = ?, cand_verif_name_t = ?, user_id_t = ?,cand_dismissed_i =? ,cand_dismissed_m =?, cand_resigned_i =?, cand_resigned_m =?, cand_nameinclude_i =?, cand_nameinclude_UN =? , cand_sexual_i =?,cand_sexual_m=?, cand_teriminated_i=?, cand_terminated_m=?, upd_d = getdate() WHERE cand_id_c = ?"
  obj_db_CmdI.CommandText = updFootersql
 if len(request.form("cand_fil_t")) then
  obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_fil_t" ,adVarChar,adParamInput,200,request.form("cand_fil_t"))
@@ -207,6 +207,22 @@ end if
 else
  obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_nameinclude_UN" ,adLongVarChar,adParamInput,10000,NULL)
 end if
+
+ obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_sexual_i" ,adTinyInt,adParamInput,1,request.form("cand_sexual_i"))
+     if len(request.form("cand_resigned_m")) then
+ obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_sexual_m" ,adLongVarChar,adParamInput,10000,request.form("cand_sexual_m"))
+else
+ obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_sexual_m" ,adLongVarChar,adParamInput,10000,NULL)
+end if
+
+obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_teriminated_i" ,adTinyInt,adParamInput,1,request.form("cand_teriminated_i"))
+if len(request.form("cand_resigned_m")) then
+obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_terminated_m" ,adLongVarChar,adParamInput,10000,request.form("cand_terminated_m"))
+else
+ obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_terminated_m" ,adLongVarChar,adParamInput,10000,NULL)
+end if
+
+
  obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_id_c" ,adInteger ,adParamInput,4,session("RSYS_EVAL"))
 
   
@@ -583,7 +599,7 @@ end if
 
 
   '<<--Modified by Interface on 05/01/2007
-  JAPYsql = "SELECT upd_d, cand_fnam_t, cand_lnam_t, cand_fil_t, cand_fil_d, cand_verif_name_t, cand_law_i, cand_law_m,cand_dismissed_i, cand_dismissed_m,cand_resigned_i,cand_resigned_m,cand_nameinclude_i,cand_nameinclude_UN  	FROM td_rsys_cand WHERE cand_id_c = ?"
+  JAPYsql = "SELECT upd_d, cand_fnam_t, cand_lnam_t, cand_fil_t, cand_fil_d, cand_verif_name_t, cand_law_i, cand_law_m,cand_dismissed_i, cand_dismissed_m,cand_resigned_i,cand_resigned_m,cand_nameinclude_i,cand_nameinclude_UN,cand_sexual_m,cand_sexual_i,cand_terminated_m,cand_teriminated_i  	FROM td_rsys_cand WHERE cand_id_c = ?"
   obj_db_select_CmdIII.CommandText = JAPYsql
   Set JAPY = obj_db_select_CmdIII.Execute(,Array(session("RSYS_EVAL")))
   '-->>
@@ -1433,6 +1449,73 @@ if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 29
     <textarea  wrap="soft" ROWS="3" NAME="cand_law_m" COLS="50"><% response.write JAPY("cand_law_m")%></TEXTAREA><br><br></td>
 </tr>
 <%end if
+
+    '<!---  manoj added info for sexual misconducted  -->
+    if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 2900) AND NOT Request.form("GOEDITV") = "99" then
+%>
+
+<tr>
+	<td valign="top" class="text" colspan="2"><%=gVText("i_97")%>
+	<br><br>
+    <select  id="cand_sexual_i" name="cand_sexual_i">
+    <%
+    
+    'if len( trim(JAPY("cand_law_i")) ) then ///>
+    if trim(JAPY("cand_sexual_i")) >= 0 then %>
+    <option value=""><%=gVText("i_71")%>
+    <option value="1" <% If trim(JAPY("cand_sexual_i")) = "1" then%> SELECTED<% End If%> ><%=gVText("i_18")%>
+    <option value="0" <% If trim(JAPY("cand_sexual_i")) = "0" then%> SELECTED<% End If%> ><%=gVText("i_19")%>
+    <%else%>
+    <option value="" SELECTED><%=gVText("i_71")%>
+    <option value="1"><%=gVText("i_18")%>
+    <option value="0"><%=gVText("i_19")%>
+    <%end if%>
+    </select></TD>
+</TR>
+<tr>
+    <td valign="top" colspan="2"><br><span id="span4"><%=gVText("i_12")%></span><Br>
+    <textarea  wrap="soft" ROWS="3" NAME="cand_sexual_m" COLS="50"><% response.write JAPY("cand_sexual_m")%></TEXTAREA><br><br></td>
+</tr>
+<%end if
+
+
+'sexual misconducted reason end here
+
+'<!---  manoj added info for terminated reason  -->
+    if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 2900) AND NOT Request.form("GOEDITV") = "99" then
+%>
+
+<tr>
+	<td valign="top" class="text" colspan="2"><%=gVText("i_98")%>
+	<br><br>
+    <select  id="cand_teriminated_i" name="cand_teriminated_i">
+    <%
+    
+    'if len( trim(JAPY("cand_law_i")) ) then ///>
+    if trim(JAPY("cand_teriminated_i")) >= 0 then %>
+    <option value=""><%=gVText("i_71")%>
+    <option value="1" <% If trim(JAPY("cand_teriminated_i")) = "1" then%> SELECTED<% End If%> ><%=gVText("i_18")%>
+    <option value="0" <% If trim(JAPY("cand_teriminated_i")) = "0" then%> SELECTED<% End If%> ><%=gVText("i_19")%>
+    <%else%>
+    <option value="" SELECTED><%=gVText("i_71")%>
+    <option value="1"><%=gVText("i_18")%>
+    <option value="0"><%=gVText("i_19")%>
+    <%end if%>
+    </select></TD>
+</TR>
+<tr>
+    <td valign="top" colspan="2"><br><span id="span5"><%=gVText("i_12")%></span><Br>
+    <textarea  wrap="soft" ROWS="3" NAME="cand_terminated_m" COLS="50"><% response.write JAPY("cand_terminated_m")%></TEXTAREA><br><br></td>
+</tr>
+<%end if
+
+
+'terminated  reason end here
+
+
+
+
+
 
 
 '<!---  manoj added info for Dismissed  -->
