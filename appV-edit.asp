@@ -1422,35 +1422,7 @@ if Request.form("postadding") = "1" then
 	'set Logss = rsys_logs.execute(Logsssql)
 else
 	
-	'01 SEP 15 LJL moved WMO law section to Other info section
-if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 2900) AND NOT Request.form("GOEDITV") = "99" then
-%>
-
-<tr>
-	<td valign="top" class="text" colspan="2"><%=gVText("i_11")%>
-	<br><br>
-    <select  id="cand_law_i" name="cand_law_i">
-    <%
-    //Modified on 08/13/2008 , to display previously selected answer.
-    'if len( trim(JAPY("cand_law_i")) ) then ///>
-    if trim(JAPY("cand_law_i")) >= 0 then %>
-    <option value=""><%=gVText("i_71")%>
-    <option value="1" <% If trim(JAPY("cand_law_i")) = "1" then%> SELECTED<% End If%> ><%=gVText("i_18")%>
-    <option value="0" <% If trim(JAPY("cand_law_i")) = "0" then%> SELECTED<% End If%> ><%=gVText("i_19")%>
-    <%else%>
-    <option value="" SELECTED><%=gVText("i_71")%>
-    <option value="1"><%=gVText("i_18")%>
-    <option value="0"><%=gVText("i_19")%>
-    <%end if%>
-    </select></TD>
-</TR>
-<tr>
-    <td valign="top" colspan="2"><br><span id="span_law_anw"><%=gVText("i_12")%></span><Br>
-    <textarea  wrap="soft" ROWS="3" NAME="cand_law_m" COLS="50"><% response.write JAPY("cand_law_m")%></TEXTAREA><br><br></td>
-</tr>
-<%end if
-
-    '<!---  manoj added info for sexual misconducted  -->
+  '<!---  manoj added info for sexual misconducted 29 june changing the order -->
     if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 2900) AND NOT Request.form("GOEDITV") = "99" then
 %>
 
@@ -1480,6 +1452,39 @@ if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 29
 
 
 'sexual misconducted reason end here
+
+
+	'01 SEP 15 LJL moved WMO law section to Other info section
+if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 2900) AND NOT Request.form("GOEDITV") = "99" then
+%>
+
+<tr>
+	<td valign="top" class="text" colspan="2"><%=gVText("i_11")%>
+	<br><br>
+    <select  id="cand_law_i" name="cand_law_i">
+    <%
+    //Modified on 08/13/2008 , to display previously selected answer.
+    'if len( trim(JAPY("cand_law_i")) ) then ///>
+    if trim(JAPY("cand_law_i")) >= 0 then %>
+    <option value=""><%=gVText("i_71")%>
+    <option value="1" <% If trim(JAPY("cand_law_i")) = "1" then%> SELECTED<% End If%> ><%=gVText("i_18")%>
+    <option value="0" <% If trim(JAPY("cand_law_i")) = "0" then%> SELECTED<% End If%> ><%=gVText("i_19")%>
+    <%else%>
+    <option value="" SELECTED><%=gVText("i_71")%>
+    <option value="1"><%=gVText("i_18")%>
+    <option value="0"><%=gVText("i_19")%>
+    <%end if%>
+    </select></TD>
+</TR>
+<tr>
+    <td valign="top" colspan="2"><br><span id="span_law_anw"><%=gVText("i_12")%></span><Br>
+    <textarea  wrap="soft" ROWS="3" NAME="cand_law_m" COLS="50"><% response.write JAPY("cand_law_m")%></TEXTAREA><br><br></td>
+</tr>
+<%end if
+
+	'law secion end here
+
+   
 
 '<!---  manoj added info for terminated reason  -->
     if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 2900) AND NOT Request.form("GOEDITV") = "99" then
