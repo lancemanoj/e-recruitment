@@ -795,11 +795,11 @@ function DataValidation()
             });
 
 
-    'manoj changes 
+//    'manoj changes 
 
-    
-    	' Modified by Interface on 07/23/2007
-		' To prevent 'script' to be included in text.
+//    
+//    	' Modified by Interface on 07/23/2007
+//		' To prevent 'script' to be included in text.
 	    if(!ValidateForm(document.forms[0]))
 		{
 			return false;
@@ -848,8 +848,41 @@ else
             alert("<% response.write gVText("i_70")%>");
 			document.data.cand_law_i.focus();
             return false;
-        }
+	     }
+	     if (document.data.cand_sexual_i.value == "") {
+			   alert("<% response.write gVText("i_70")%>");
+			document.data.cand_sexual_i.focus();
+			   return false;
+	 }
 
+	    if (document.data.cand_dismissed_i.value == "") {
+	   alert("<% response.write gVText("i_70")%>");
+	document.data.cand_dismissed_i.focus();
+	   return false;
+}
+
+
+	
+
+	    if (document.data.cand_teriminated_i.value == "") {
+	   alert("<% response.write gVText("i_70")%>");
+	document.data.cand_teriminated_i.focus();
+	   return false;
+	 }
+	
+	    if (document.data.cand_resigned_i.value == "") {
+	   alert("<% response.write gVText("i_70")%>");
+	document.data.cand_resigned_i.focus();
+	   return false;
+	 }
+	
+	    if (document.data.cand_nameinclude_i.value == "") {
+	   alert("<% response.write gVText("i_70")%>");
+	document.data.cand_nameinclude_i.focus();
+	   return false;
+
+        
+	 }
 	<%end if
 
      if session("template_org_code") = 1500 then %>
