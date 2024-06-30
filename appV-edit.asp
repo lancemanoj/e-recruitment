@@ -635,7 +635,29 @@ end if
 
 
 $(document).ready(function(){
-     if (document.data.cand_law_i.value =="0" || document.data.cand_law_i.value =="")
+    
+	
+	
+	  if (document.data.cand_sexual_i.value =="0" || document.data.cand_sexual_i.value =="")
+  {   
+          document.data.cand_sexual_m.style.display = "none";  document.getElementById("span4").style.display = "none";
+  }
+else if (document.data.cand_sexual_i.value =="1")
+  { 
+    document.data.cand_sexual_m.style.display = "block";document.getElementById("span4").style.display = "block";
+  }
+
+
+ $("#cand_sexual_i").change(function(){
+    if (document.data.cand_sexual_i.value =="0" || document.data.cand_sexual_i.value =="")
+              {  document.data.cand_sexual_m.style.display = "none";  document.getElementById("span4").style.display = "none";}
+        if (document.data.cand_sexual_i.value =="1")
+               {  document.data.cand_sexual_m.style.display = "block";document.getElementById("span4").style.display = "block";}
+    
+ });
+	
+	
+	if (document.data.cand_law_i.value =="0" || document.data.cand_law_i.value =="")
      {   
              document.data.cand_law_m.style.display = "none";  document.getElementById("span_law_anw").style.display = "none";
      }
