@@ -655,20 +655,20 @@ $(document).ready(function(){
        
     });
     
-       if (document.data.cand_dismissed_i.value =="0")
+     if (document.data.cand_dismissed_i.value =="0")
      {   
-            document.data.cand_dismissed_m.readOnly = true; document.data.cand_dismissed_m.disabled = true; 
+	  document.data.cand_dismissed_m.style.display = "none";  document.getElementById("span1").style.display = "none";
      }
      if (document.data.cand_dismissed_i.value =="1")
      { 
-        document.data.cand_dismissed_m.readOnly = false; document.data.cand_dismissed_m.disabled = false;
+         document.data.cand_dismissed_m.style.display = "block";  document.getElementById("span1").style.display = "block";
      }
    
     $("#cand_dismissed_i").change(function(){
        if (document.data.cand_dismissed_i.value =="0" || document.data.cand_dismissed_i.value =="")
-                 { document.data.cand_dismissed_m.readOnly = true; document.data.cand_dismissed_m.disabled = true;}
+                 {  document.data.cand_dismissed_m.style.display = "none";  document.getElementById("span1").style.display = "none";}
            if (document.data.cand_dismissed_i.value =="1")
-                  { document.data.cand_dismissed_m.readOnly = false;  document.data.cand_dismissed_m.disabled = false;}
+                  { document.data.cand_dismissed_m.style.display = "block";  document.getElementById("span1").style.display = "block";}
                   
 
        
