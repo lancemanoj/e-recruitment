@@ -635,14 +635,15 @@ end if
 
 
 $(document).ready(function(){
-     if (document.data.cand_law_i.value =="0")
+     if (document.data.cand_law_i.value =="0" || document.data.cand_law_i.value =="")
      {   
              document.data.cand_law_m.style.display = "none";  document.getElementById("span_law_anw").style.display = "none";
      }
-     if (document.data.cand_law_i.value =="1")
+   else if (document.data.cand_law_i.value =="1")
      { 
        document.data.cand_law_m.style.display = "block";document.getElementById("span_law_anw").style.display = "block";
      }
+
    
     $("#cand_law_i").change(function(){
        if (document.data.cand_law_i.value =="0" || document.data.cand_law_i.value =="")
@@ -655,7 +656,7 @@ $(document).ready(function(){
        
     });
     
-     if (document.data.cand_dismissed_i.value =="0")
+     if (document.data.cand_dismissed_i.value =="0" || document.data.cand_dismissed_i.value =="")
      {   
 	  document.data.cand_dismissed_m.style.display = "none";  document.getElementById("span1").style.display = "none";
      }
@@ -675,40 +676,42 @@ $(document).ready(function(){
        
     });
 
-       if (document.data.cand_resigned_i.value =="0")
+       if (document.data.cand_resigned_i.value =="0" || document.data.cand_resigned_i.value =="")
      {   
-            document.data.cand_resigned_m.readOnly = true; document.data.cand_resigned_m.disabled = true; 
+            
+	       document.data.cand_resigned_m.style.display = "none";  document.getElementById("span2").style.display = "none";
      }
      if (document.data.cand_resigned_i.value =="1")
      { 
-        document.data.cand_resigned_m.readOnly = false; document.data.cand_resigned_m.disabled = false;
+         document.data.cand_resigned_m.style.display = "block";  document.getElementById("span2").style.display = "block";
      }
    
     $("#cand_resigned_i").change(function(){
        if (document.data.cand_resigned_i.value =="0" || document.data.cand_resigned_i.value =="")
-                 { document.data.cand_resigned_m.readOnly = true; document.data.cand_resigned_m.disabled = true;}
+                 { document.data.cand_resigned_m.style.display = "none";  document.getElementById("span2").style.display = "none";}
            if (document.data.cand_resigned_i.value =="1")
-                  { document.data.cand_resigned_m.readOnly = false;  document.data.cand_resigned_m.disabled = false;}
+                  { document.data.cand_resigned_m.style.display = "block";  document.getElementById("span2").style.display = "block";;}
                   
 
        
        
     });
 
-      if (document.data.cand_nameinclude_i.value =="0")
+      if (document.data.cand_nameinclude_i.value =="0" || document.data.cand_nameinclude_i.value =="")
      {   
-            document.data.cand_nameinclude_UN.readOnly = true; document.data.cand_nameinclude_UN.disabled = true; 
+          
+	 document.data.cand_nameinclude_UN.style.display = "none";  document.getElementById("span3").style.display = "none";
      }
      if (document.data.cand_nameinclude_i.value =="1")
      { 
-        document.data.cand_nameinclude_UN.readOnly = false; document.data.cand_nameinclude_UN.disabled = false;
+   document.data.cand_nameinclude_UN.style.display = "block";  document.getElementById("span3").style.display = "block";
      }
    
     $("#cand_nameinclude_i").change(function(){
        if (document.data.cand_nameinclude_i.value =="0" || document.data.cand_nameinclude_i.value =="")
-                 { document.data.cand_nameinclude_UN.readOnly = true; document.data.cand_nameinclude_UN.disabled = true;}
+                 { 	 document.data.cand_nameinclude_UN.style.display = "none";  document.getElementById("span3").style.display = "none";}
            if (document.data.cand_nameinclude_i.value =="1")
-                  { document.data.cand_nameinclude_UN.readOnly = false;  document.data.cand_nameinclude_UN.disabled = false;}
+                  {    document.data.cand_nameinclude_UN.style.display = "block";  document.getElementById("span3").style.display = "block";}
                   
 
        
