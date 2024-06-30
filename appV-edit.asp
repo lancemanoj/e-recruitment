@@ -638,7 +638,7 @@ $(document).ready(function(){
     
 	
 	
-	  if (document.data.cand_sexual_i.value =="0" || document.data.cand_sexual_i.value =="")
+if (document.data.cand_sexual_i.value =="0" || document.data.cand_sexual_i.value =="")
   {   
           document.data.cand_sexual_m.style.display = "none";  document.getElementById("span4").style.display = "none";
   }
@@ -653,6 +653,25 @@ else if (document.data.cand_sexual_i.value =="1")
               {  document.data.cand_sexual_m.style.display = "none";  document.getElementById("span4").style.display = "none";}
         if (document.data.cand_sexual_i.value =="1")
                {  document.data.cand_sexual_m.style.display = "block";document.getElementById("span4").style.display = "block";}
+    
+ });
+
+
+	if (document.data.cand_teriminated_i.value =="0" || document.data.cand_teriminated_i.value =="")
+  {   
+          document.data.cand_terminated_m.style.display = "none";  document.getElementById("span5").style.display = "none";
+  }
+else if (document.data.cand_teriminated_i.value =="1")
+  { 
+    document.data.cand_terminated_m.style.display = "block";document.getElementById("span5").style.display = "block";
+  }
+
+
+ $("#cand_teriminated_i").change(function(){
+    if (document.data.cand_teriminated_i.value =="0" || document.data.cand_teriminated_i.value =="")
+              {  document.data.cand_terminated_m.style.display = "none";  document.getElementById("span5").style.display = "none";}
+        if (document.data.cand_teriminated_i.value =="1")
+               {  document.data.cand_terminated_m.style.display = "block";document.getElementById("span5").style.display = "block";}
     
  });
 	
@@ -776,11 +795,11 @@ function DataValidation()
             });
 
 
-    //       manoj changes 
+    'manoj changes 
 
     
-    	// Modified by Interface on 07/23/2007
-		// To prevent 'script' to be included in text.
+    	' Modified by Interface on 07/23/2007
+		' To prevent 'script' to be included in text.
 	    if(!ValidateForm(document.forms[0]))
 		{
 			return false;
