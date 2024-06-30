@@ -637,18 +637,18 @@ end if
 $(document).ready(function(){
      if (document.data.cand_law_i.value =="0")
      {   
-            document.data.cand_law_m.readOnly = true; document.data.cand_law_m.disabled = true; 
+             document.data.cand_law_m.style.display = "none";  document.getElementById("span_law_anw").style.display = "none";
      }
      if (document.data.cand_law_i.value =="1")
      { 
-        document.data.cand_law_m.readOnly = false; document.data.cand_law_m.disabled = false;
+       document.data.cand_law_m.style.display = "block";document.getElementById("span_law_anw").style.display = "block";
      }
    
     $("#cand_law_i").change(function(){
        if (document.data.cand_law_i.value =="0" || document.data.cand_law_i.value =="")
-                 { document.data.cand_law_m.readOnly = true; document.data.cand_law_m.disabled = true;}
+                 {  document.data.cand_law_m.style.display = "none";  document.getElementById("span_law_anw").style.display = "none";}
            if (document.data.cand_law_i.value =="1")
-                  { document.data.cand_law_m.readOnly = false;  document.data.cand_law_m.disabled = false;}
+                  {  document.data.cand_law_m.style.display = "block";document.getElementById("span_law_anw").style.display = "block";}
                   
 
        
