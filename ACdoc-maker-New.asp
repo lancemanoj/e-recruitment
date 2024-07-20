@@ -369,7 +369,7 @@ end if
 if instr(pv_parts,"V,") then
 Dim gITEXTVsql, gITEXTV
 '<<--Modified by Interface on 07/25/2007
-	gITEXTVsql = "SELECT i_1, i_text1, i_3, i_4, i_10,i_11,i_18,i_19,i_94,i_95,i_96 FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'V' "
+	gITEXTVsql = "SELECT i_1, i_text1, i_3, i_4, i_10,i_11,i_18,i_19,i_94,i_95,i_96,i_97 FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'V' "
 	obj_int_select_CmdII.CommandText = gITEXTVsql
 	Set gITEXTV = obj_int_select_CmdII.Execute(,Array(pv_new_sessioncode,session("lng")))
 '-->>
@@ -5638,23 +5638,24 @@ f.WriteLine "<p><br></p>"
 'f.WriteLine "<tr height=""19"">"
 'f.WriteLine "<td valign=""top"" bgcolor=""" & gITEXTPH("i_60") & """><h2><font color=""" & g_headerColor & """>" & gITEXTV("i_1") & "</font></h2></td>"
 'f.WriteLine "</TR>"
+	'manoj added for sexual misconduct
 	         f.WriteLine "<TR>"
 			f.WriteLine "<td valign=""top"">" 
+	   f.WriteLine "<b>" & gITEXTV("i_97") & "</b>"
+     f.WriteLine "<p><br></p>"
+ if   trim(JAPY("cand_sexual_i")) = "1" then  
+	
+        f.WriteLine "" & gITEXTV("i_18")  & ", "
+        f.WriteLine JAPY("cand_sexual_m")    
+
+else
+	f.WriteLine "" & gITEXTV("i_19") & ""
+      end if
+        f.WriteLine "<p><br></p>"
+	'manoj added for sexual misconduct end
+	f.WriteLine "<p><br></p>"
            f.WriteLine "<b>" & gITEXTV("i_11") & "</b>"
              f.WriteLine "<p><br></p>"
-	'manoj added for sexual misconduct
-	  if   trim(JAPY("cand_sexual_i")) = "1" then  
-	
-          f.WriteLine "" & gITEXTV("i_18")  & ", "
-          f.WriteLine JAPY("cand_sexual_m")    
-
-  else
-	f.WriteLine "" & gITEXTV("i_19") & ""
-         
-        end if
-     
-          f.WriteLine "<p><br></p>"
-	'manoj added for sexual misconduct end
              
     if   trim(JAPY("cand_law_i")) = "1" then  
 			
