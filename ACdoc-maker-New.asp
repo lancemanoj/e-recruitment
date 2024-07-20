@@ -369,7 +369,7 @@ end if
 if instr(pv_parts,"V,") then
 Dim gITEXTVsql, gITEXTV
 '<<--Modified by Interface on 07/25/2007
-	gITEXTVsql = "SELECT i_1, i_text1, i_3, i_4, i_10,i_11,i_18,i_19,i_94,i_95,i_96,i_97 FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'V' "
+	gITEXTVsql = "SELECT i_1, i_text1, i_3, i_4, i_10,i_11,i_18,i_19,i_94,i_95,i_96,i_97,i_98 FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'V' "
 	obj_int_select_CmdII.CommandText = gITEXTVsql
 	Set gITEXTV = obj_int_select_CmdII.Execute(,Array(pv_new_sessioncode,session("lng")))
 '-->>
@@ -794,7 +794,7 @@ end if
 
 '***************************jap detal for all org by manoj
        '<<--Modified by Interface on 05/01/2007
-  JAPYsql = "SELECT upd_d, cand_fnam_t, cand_lnam_t, cand_fil_t, cand_fil_d, cand_verif_name_t, cand_law_i, cand_law_m,cand_dismissed_i, cand_dismissed_m,cand_resigned_i,cand_resigned_m,cand_nameinclude_i,cand_nameinclude_UN,cand_sexual_i,cand_sexual_m FROM td_rsys_cand WHERE cand_id_c = ?"
+  JAPYsql = "SELECT upd_d, cand_fnam_t, cand_lnam_t, cand_fil_t, cand_fil_d, cand_verif_name_t, cand_law_i, cand_law_m,cand_dismissed_i, cand_dismissed_m,cand_resigned_i,cand_resigned_m,cand_nameinclude_i,cand_nameinclude_UN,cand_sexual_i,cand_sexual_m,cand_teriminated_i,cand_terminated_m FROM td_rsys_cand WHERE cand_id_c = ?"
   obj_int_select_CmdII.CommandText = JAPYsql
   Set JAPY = obj_int_select_CmdII.Execute(,Array(applicant_id))
   '-->>
@@ -5653,7 +5653,10 @@ else
       end if
         f.WriteLine "<p><br></p>"
 	'manoj added for sexual misconduct end
+		
 	f.WriteLine "<p><br></p>"
+	  f.WriteLine "<TR>"
+	f.WriteLine "<td valign=""top"">" 
            f.WriteLine "<b>" & gITEXTV("i_11") & "</b>"
              f.WriteLine "<p><br></p>"
              
@@ -5667,9 +5670,25 @@ else
            
           end if
        
-            f.WriteLine "<p><br></p>"
+	f.WriteLine "<p><br></p>"
 
-       
+       		'manoj added for terminated
+	         f.WriteLine "<TR>"
+			f.WriteLine "<td valign=""top"">" 
+	   f.WriteLine "<b>" & gITEXTV("i_98") & "</b>"
+     f.WriteLine "<p><br></p>"
+ if   trim(JAPY("cand_teriminated_i")) = "1" then  
+	
+        f.WriteLine "" & gITEXTV("i_18")  & ", "
+        f.WriteLine JAPY("cand_terminated_m")    
+
+else
+	f.WriteLine "" & gITEXTV("i_19") & ""
+      end if
+        f.WriteLine "<p><br></p>"
+	'manoj added for terminated end
+	  f.WriteLine "<TR>"
+	f.WriteLine "<td valign=""top"">" 
 			f.WriteLine "<b>" & gITEXTV("i_94")   & "</b> "
              f.WriteLine "<p><br></p>"
              if   trim(JAPY("cand_dismissed_i")) = "1" then  
@@ -5681,7 +5700,8 @@ else
            
         end if
      f.WriteLine "<p><br></p>"
-
+	  f.WriteLine "<TR>"
+	f.WriteLine "<td valign=""top"">" 
      f.WriteLine "<b>" & gITEXTV("i_95")   & "</b>"
              f.WriteLine "<p><br></p>"
              if   trim(JAPY("cand_resigned_i")) = "1" then  
@@ -5694,7 +5714,8 @@ else
         end if
 		
     f.WriteLine "<p><br></p>"
-       
+         f.WriteLine "<TR>"
+	f.WriteLine "<td valign=""top"">" 
 			   f.WriteLine "<b>" & gITEXTV("i_96")   & "</b>"
              f.WriteLine "<p><br></p>"
              if   trim(JAPY("cand_nameinclude_i")) = "1" then  
