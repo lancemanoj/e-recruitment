@@ -794,7 +794,7 @@ end if
 
 '***************************jap detal for all org by manoj
        '<<--Modified by Interface on 05/01/2007
-  JAPYsql = "SELECT upd_d, cand_fnam_t, cand_lnam_t, cand_fil_t, cand_fil_d, cand_verif_name_t, cand_law_i, cand_law_m,cand_dismissed_i, cand_dismissed_m,cand_resigned_i,cand_resigned_m,cand_nameinclude_i,cand_nameinclude_UN  	FROM td_rsys_cand WHERE cand_id_c = ?"
+  JAPYsql = "SELECT upd_d, cand_fnam_t, cand_lnam_t, cand_fil_t, cand_fil_d, cand_verif_name_t, cand_law_i, cand_law_m,cand_dismissed_i, cand_dismissed_m,cand_resigned_i,cand_resigned_m,cand_nameinclude_i,cand_nameinclude_UN,cand_sexual_i,cand_sexual_m FROM td_rsys_cand WHERE cand_id_c = ?"
   obj_int_select_CmdII.CommandText = JAPYsql
   Set JAPY = obj_int_select_CmdII.Execute(,Array(applicant_id))
   '-->>
@@ -5642,6 +5642,19 @@ f.WriteLine "<p><br></p>"
 			f.WriteLine "<td valign=""top"">" 
            f.WriteLine "<b>" & gITEXTV("i_11") & "</b>"
              f.WriteLine "<p><br></p>"
+	'manoj added for sexual misconduct
+	  if   trim(JAPY("cand_sexual_i")) = "1" then  
+	
+          f.WriteLine "" & gITEXTV("i_18")  & ", "
+          f.WriteLine JAPY("cand_sexual_m")    
+
+  else
+	f.WriteLine "" & gITEXTV("i_19") & ""
+         
+        end if
+     
+          f.WriteLine "<p><br></p>"
+	'manoj added for sexual misconduct end
              
     if   trim(JAPY("cand_law_i")) = "1" then  
 			
