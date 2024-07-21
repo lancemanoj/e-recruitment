@@ -5632,141 +5632,101 @@ f.WriteLine "<p><br></p>"
 ' SECTION VERIFICATION
 ' ******************************************************************************
 ' BEGIN CHECK IF PERSON SELECTED SECTION V
-		if instr(pv_parts,"V,") then
-		f.WriteLine "<p><br></p>"
-			f.WriteLine "<h2><font color=""" & g_headerColor & """>" & gITEXTV("i_1") & "</font></h2>"
-			f.WriteLine "<TABLE border=""1"" bordercolor=""black"" cellpadding=""2"" width=""" &  widther & """ align=""center"">"
-'f.WriteLine "<tr height=""19"">"
-'f.WriteLine "<th colspan=""1"">  <a style=""abcpdf-tag-visible: true;"" id='" & gITEXTV("i_1") & "_|" & intNumber  &  "'>" & gITEXTV("i_1") & "</a></th>"
-'f.WriteLine "</TR>"
-'Commented by atul for table of content
-'f.WriteLine "<tr height=""19"">"
-'f.WriteLine "<td valign=""top"" bgcolor=""" & gITEXTPH("i_60") & """><h2><font color=""" & g_headerColor & """>" & gITEXTV("i_1") & "</font></h2></td>"
-'f.WriteLine "</TR>"
-	'manoj added for sexual misconduct
-	         f.WriteLine "<TR>"
-			f.WriteLine "<td valign=""top"">" 
-	   f.WriteLine "<b>" & gITEXTV("i_97") & "</b>"
-     f.WriteLine "<p><br></p>"
- if   trim(JAPY("cand_sexual_i")) = 1 then  
-	
-        f.WriteLine "" & gITEXTV("i_18")  & ", "
-        f.WriteLine JAPY("cand_sexual_m")    
-
-else
-	f.WriteLine "" & gITEXTV("i_19") & ""
-      end if
-        f.WriteLine "<p><br></p>"
-	'manoj added for sexual misconduct end
-		
-	f.WriteLine "<p><br></p>"
-	  f.WriteLine "<TR>"
-	f.WriteLine "<td valign=""top"">" 
-           f.WriteLine "<b>" & gITEXTV("i_11") & "</b>"
-             f.WriteLine "<p><br></p>"
-             
-    if   trim(JAPY("cand_law_i")) = "1" then  
-			
-            f.WriteLine "" & gITEXTV("i_18")  & ", "
-            f.WriteLine JAPY("cand_law_m")    
-
-		  else
-			f.WriteLine "" & gITEXTV("i_19") & ""
-           
-          end if
-       
-	f.WriteLine "<p><br></p>"
-
-       		'manoj added for terminated
-	         f.WriteLine "<TR>"
-			f.WriteLine "<td valign=""top"">" 
-	   f.WriteLine "<b>" & gITEXTV("i_98") & "</b>"
-     f.WriteLine "<p><br></p>"
- if   trim(JAPY("cand_teriminated_i")) = "1" then  
-	
-        f.WriteLine "" & gITEXTV("i_18")  & ", "
-        f.WriteLine JAPY("cand_terminated_m")    
-
-else
-	f.WriteLine "" & gITEXTV("i_19") & ""
-      end if
-        f.WriteLine "<p><br></p>"
-	'manoj added for terminated end
-	  f.WriteLine "<TR>"
-	f.WriteLine "<td valign=""top"">" 
-			f.WriteLine "<b>" & gITEXTV("i_94")   & "</b> "
-             f.WriteLine "<p><br></p>"
-             if   trim(JAPY("cand_dismissed_i")) = "1" then  
-			f.WriteLine "" & gITEXTV("i_18")  & ", "
-            f.WriteLine JAPY("cand_dismissed_m")
-
-		else
-			f.WriteLine "" & gITEXTV("i_19") & ""
-           
-        end if
-     f.WriteLine "<p><br></p>"
-	  f.WriteLine "<TR>"
-	f.WriteLine "<td valign=""top"">" 
-     f.WriteLine "<b>" & gITEXTV("i_95")   & "</b>"
-             f.WriteLine "<p><br></p>"
-             if   trim(JAPY("cand_resigned_i")) = "1" then  
-			f.WriteLine "" & gITEXTV("i_18")  & ", "
-           f.WriteLine JAPY("cand_resigned_m")
-
-		else
-			f.WriteLine "" & gITEXTV("i_19") & ""
-           
-        end if
-		
+	if instr(pv_parts,"V,") then
     f.WriteLine "<p><br></p>"
-         f.WriteLine "<TR>"
-	f.WriteLine "<td valign=""top"">" 
-			   f.WriteLine "<b>" & gITEXTV("i_96")   & "</b>"
-             f.WriteLine "<p><br></p>"
-             if   trim(JAPY("cand_nameinclude_i")) = "1" then  
-           f.WriteLine "" & gITEXTV("i_18")  & " , "
-           f.WriteLine JAPY("cand_nameinclude_UN")
+    f.WriteLine "<h2><font color=""" & g_headerColor & """>" & gITEXTV("i_1") & "</font></h2>"
+    f.WriteLine "<TABLE border=""1"" bordercolor=""black"" cellpadding=""2"" width=""" &  widther & """ align=""center"">"
 
-		else
-			f.WriteLine "" & gITEXTV("i_19") & ""
-           
+    ' Sexual misconduct
+    f.WriteLine "<TR><td valign=""top"">"
+    f.WriteLine gITEXTV("i_97")
+    f.WriteLine "<p><br></p>"
+    if trim(JAPY("cand_sexual_i")) = 1 then  
+        f.WriteLine "<b>" & gITEXTV("i_18")  & ", " & JAPY("cand_sexual_m") & "</b>"
+    else
+        f.WriteLine "<b>" & gITEXTV("i_19") & "</b>"
+    end if
+    f.WriteLine "<p><br></p></td></TR>"
+
+    ' Law issue
+    f.WriteLine "<TR><td valign=""top"">"
+    f.WriteLine gITEXTV("i_11")
+    f.WriteLine "<p><br></p>"
+    if trim(JAPY("cand_law_i")) = "1" then  
+        f.WriteLine "<b>" & gITEXTV("i_18")  & ", " & JAPY("cand_law_m") & "</b>"
+    else
+        f.WriteLine "<b>" & gITEXTV("i_19") & "</b>"
+    end if
+    f.WriteLine "<p><br></p></td></TR>"
+
+    ' Terminated
+    f.WriteLine "<TR><td valign=""top"">"
+    f.WriteLine gITEXTV("i_98")
+    f.WriteLine "<p><br></p>"
+    if trim(JAPY("cand_teriminated_i")) = "1" then  
+        f.WriteLine "<b>" & gITEXTV("i_18")  & ", " & JAPY("cand_terminated_m") & "</b>"
+    else
+        f.WriteLine "<b>" & gITEXTV("i_19") & "</b>"
+    end if
+    f.WriteLine "<p><br></p></td></TR>"
+
+    ' Dismissed
+    f.WriteLine "<TR><td valign=""top"">"
+    f.WriteLine gITEXTV("i_94")
+    f.WriteLine "<p><br></p>"
+    if trim(JAPY("cand_dismissed_i")) = "1" then  
+        f.WriteLine "<b>" & gITEXTV("i_18")  & ", " & JAPY("cand_dismissed_m") & "</b>"
+    else
+        f.WriteLine "<b>" & gITEXTV("i_19") & "</b>"
+    end if
+    f.WriteLine "<p><br></p></td></TR>"
+
+    ' Resigned
+    f.WriteLine "<TR><td valign=""top"">"
+    f.WriteLine gITEXTV("i_95")
+    f.WriteLine "<p><br></p>"
+    if trim(JAPY("cand_resigned_i")) = "1" then  
+        f.WriteLine "<b>" & gITEXTV("i_18")  & ", " & JAPY("cand_resigned_m") & "</b>"
+    else
+        f.WriteLine "<b>" & gITEXTV("i_19") & "</b>"
+    end if
+    f.WriteLine "<p><br></p></td></TR>"
+
+    ' Name included
+    f.WriteLine "<TR><td valign=""top"">"
+    f.WriteLine gITEXTV("i_96")
+    f.WriteLine "<p><br></p>"
+    if trim(JAPY("cand_nameinclude_i")) = "1" then  
+        f.WriteLine "<b>" & gITEXTV("i_18")  & " , " & JAPY("cand_nameinclude_UN") & "</b>"
+    else
+        f.WriteLine "<b>" & gITEXTV("i_19") & "</b>"
+    end if
+    f.WriteLine "</td></TR>"
+
+    ' Additional information
+    f.WriteLine "<TR><td valign=""top"">" & gITEXTV("i_text1") & "</td></TR>"
+    f.WriteLine "<TR><td valign=""top"" align=""left"">" & gITEXTV("i_3") & ": <strong>"
+    if len(JAPINFO1("cand_fil_d")) then
+        f.WriteLine day(JAPINFO1("cand_fil_d")) & " " & monthname(month(JAPINFO1("cand_fil_d")),2) & " " & year(JAPINFO1("cand_fil_d"))
+    end if
+    f.WriteLine "</strong></td></TR>"
+
+    if pv_new_sessioncode <> 3000 then
+        f.WriteLine "<TR><td valign=""top"" align=""left"">" & gITEXTV("i_4") & ": <strong>" & JAPINFO1("cand_fil_t") & "</strong></td></TR>"
+    end if
+
+    f.WriteLine "<TR><td valign=""top"" align=""left"">" & gITEXTV("i_10") & ": <strong>" & JAPINFO1("cand_verif_name_t") & "</strong></td></TR>"
+    f.WriteLine "<TR><td valign=""top"">&nbsp;</td></TR>"
+
+    if Request.querystring("viewupd") = "YES" then
+        if GETUPDS("editFooter_d") > GETAPPDATE("candjob_d") then
+            f.WriteLine "<TR><td valign=""top"" bgcolor=""" & gITEXTPH("i_62") & """><font color=""" & gITEXTPH("i_63") & """>Last update date <strong>" & formatdatetime(GETUPDS("EditFooter_d"),1) & " AFTER APPLYING</strong></td></TR>"
         end if
-		
-    f.WriteLine "</TD></TR>"
+    end if
 
+    f.WriteLine "</TABLE>"
+end if
 
-
-			f.WriteLine "<TR>"
-			f.WriteLine "<td valign=""top"">" & gITEXTV("i_text1") & "</TD>"
-			f.WriteLine "</TR>"
-			f.WriteLine "<TR>"
-			f.WriteLine "<td valign=""top"" align=""left"">" & gITEXTV("i_3") & ": <strong>"
-			if   len(JAPINFO1("cand_fil_d")) then
-				f.WriteLine day(JAPINFO1("cand_fil_d")) & " " & monthname(month(JAPINFO1("cand_fil_d")),2) & " " & year(JAPINFO1("cand_fil_d"))
-			end if
-			f.WriteLine "</strong></TD>"
-			f.WriteLine "</TR>"
-			if pv_new_sessioncode <> 3000 then
-			f.WriteLine "<TR>"
-			f.WriteLine "<td valign=""top"" align=""left"">" & gITEXTV("i_4") & ": <strong>" & JAPINFO1("cand_fil_t") & "</strong></TD>"
-			f.WriteLine "</TR>"
-			end if
-			f.WriteLine "<TR>"
-			f.WriteLine "<td valign=""top"" align=""left"">" & gITEXTV("i_10") & ": <strong>" & JAPINFO1("cand_verif_name_t") & "</strong></TD>"
-			f.WriteLine "</TR>"
-			f.WriteLine "<TR>"
-			f.WriteLine "<td valign=""top"">&nbsp;</td>"
-			f.WriteLine "</TR>"
-'   '-------------------------------------- TO SHOW UPDATES SINCE APPLICATION TO POST 15 MAR 05 LJL per WTO reqs ---------------------------------------------->
-			if   Request.querystring("viewupd") = "YES"  then
-				if   GETUPDS("editFooter_d") > GETAPPDATE("candjob_d")  then
-					f.WriteLine "<TR>"
-					f.WriteLine "<td valign=""top"" bgcolor=""" & gITEXTPH("i_62") & """><font color=""" & gITEXTPH("i_63") & """>Last update date <strong>" & formatdatetime(GETUPDS("EditFooter_d"),1) & " AFTER APPLYING</strong></td>"
-					f.WriteLine "</TR>"
-				end if
-			end if
-		f.WriteLine "</TABLE>"
-	end if
 		if pv_multi = "1" then
 '02 NOV 06 LJL add new page break here as in CFM version and per htmldoc instruction manual PDF www.easysw.com
 		f.WriteLine "<!-- FOOTER CENTER """ & VN & """ -->"
