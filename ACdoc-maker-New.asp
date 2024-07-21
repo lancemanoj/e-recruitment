@@ -794,9 +794,14 @@ end if
 
 '***************************jap detal for all org by manoj
        '<<--Modified by Interface on 05/01/2007
-  JAPYsql = "SELECT upd_d, cand_fnam_t, cand_lnam_t, cand_fil_t, cand_fil_d, cand_verif_name_t, cand_law_i, cand_law_m,cand_dismissed_i, cand_dismissed_m,cand_resigned_i,cand_resigned_m,cand_nameinclude_i,cand_nameinclude_UN,cand_sexual_i,cand_sexual_m,cand_teriminated_i,cand_terminated_m FROM td_rsys_cand WHERE cand_id_c = ?"
-  obj_int_select_CmdII.CommandText = JAPYsql
-  Set JAPY = obj_int_select_CmdII.Execute(,Array(applicant_id))
+JAPYsql = "SELECT upd_d, cand_fnam_t, cand_lnam_t, cand_fil_t, cand_fil_d, cand_verif_name_t, cand_law_i, cand_law_m," & _
+          " cand_dismissed_i, cand_dismissed_m, cand_resigned_i, cand_resigned_m, cand_nameinclude_i, cand_nameinclude_UN," & _
+          " cand_sexual_i, cand_sexual_m, cand_teriminated_i, cand_terminated_m" & _
+          " FROM td_rsys_cand WHERE cand_id_c = " & applicant_id
+
+Set JAPY = Server.CreateObject("ADODB.RecordSet")
+rsys_db_select.CommandTimeout = 320
+JAPY.Open JAPYsql, rsys_db_select, 0, 1
   '-->>
 
 
@@ -5643,7 +5648,7 @@ f.WriteLine "<p><br></p>"
 			f.WriteLine "<td valign=""top"">" 
 	   f.WriteLine "<b>" & gITEXTV("i_97") & "</b>"
      f.WriteLine "<p><br></p>"
- if   trim(JAPY("cand_sexual_i")) = "1" then  
+ if   trim(JAPY("cand_sexual_i")) = 1 then  
 	
         f.WriteLine "" & gITEXTV("i_18")  & ", "
         f.WriteLine JAPY("cand_sexual_m")    
