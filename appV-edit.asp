@@ -79,7 +79,7 @@ if session("lng") = "fr" then
 '01 SEP 15 LJL moved WMO law section to Other info section
 '03 SEP 15 LJL added OI check for WMO
 '22 Feb 16 LJL/MC Add emergency resource avail dates for WHO specific VNs
-
+'26 March 2023 Manoj added Dismiss ,resigned and name include in UN fields to this form and validation
 
 ' SET TO HAVE LEFT MENU
 pv_col2right = "1"
@@ -115,7 +115,7 @@ dim obj_int_select_Cmd10
  obj_int_select_Cmd10.ActiveConnection = rsys_int_select
 '<<--Modified by Interface on 05/01/2007
 '22 Feb 16 LJL/MC Add emergency resource avail dates for WHO specific VNs
-gVTextsql = "SELECT i_1, i_3, i_4, i_5, i_7, i_8, i_9, i_11, i_12, i_13, i_14, i_15, i_18, i_19, i_20, I_32, i_33, i_34, i_40, i_44, i_45, I_46, i_47, i_48, i_50, i_55, i_61, i_62, i_64, i_70, i_71, i_72, i_80, i_81, i_82, i_83, i_84, i_text1, i_text2, i_text3  FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'V' "
+gVTextsql = "SELECT i_1, i_3, i_4, i_5, i_7, i_8, i_9, i_11, i_12, i_13, i_14, i_15, i_18, i_19, i_20, I_32, i_33, i_34, i_40, i_44, i_45, I_46, i_47, i_48, i_50, i_55, i_61, i_62, i_64, i_70, i_71, i_72, i_80, i_81, i_82, i_83, i_84, i_text1, i_text2, i_text3,i_94,i_95,i_96,i_97,i_98  FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'V' "
 obj_int_select_Cmd10.CommandText = gVTextsql
 Set gVText = obj_int_select_Cmd10.Execute(,Array(session("template_org_code"),session("lng")))
 '-->>
@@ -168,7 +168,7 @@ If Request.form("GOEDITV") = "99" then
 '<<--Modified by Interface on 06/11/2007
  set obj_db_CmdI = server.CreateObject("adodb.command")
  obj_db_CmdI.ActiveConnection = rsys_db
- updFootersql = "UPDATE td_rsys_cand SET cand_fil_d = getdate(), cand_fil_t = ?, cand_ipa_c = ?, cand_law_i = ?, cand_law_m = ?, cand_verif_ip_c = ?, cand_verif_name_t = ?, user_id_t = ? , upd_d = getdate() WHERE cand_id_c = ?"
+ updFootersql = "UPDATE td_rsys_cand SET cand_fil_d = getdate(), cand_fil_t = ?, cand_ipa_c = ?, cand_law_i = ?, cand_law_m = ?, cand_verif_ip_c = ?, cand_verif_name_t = ?, user_id_t = ?,cand_dismissed_i =? ,cand_dismissed_m =?, cand_resigned_i =?, cand_resigned_m =?, cand_nameinclude_i =?, cand_nameinclude_UN =? , cand_sexual_i =?,cand_sexual_m=?, cand_teriminated_i=?, cand_terminated_m=?, upd_d = getdate() WHERE cand_id_c = ?"
  obj_db_CmdI.CommandText = updFootersql
 if len(request.form("cand_fil_t")) then
  obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_fil_t" ,adVarChar,adParamInput,200,request.form("cand_fil_t"))
@@ -188,7 +188,45 @@ end if
  obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_verif_ip_c" ,adVarChar ,adParamInput,100,left(request.servervariables("REMOTE_ADDR"),20))
  obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_verif_name_t" ,adVarChar,adParamInput,150,left(request.form("cand_verif_name_t"),75))
  obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@user_id_t" ,adVarChar,adParamInput,100,left(session("RSYSUSER"),20))
+       obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_dismissed_i" ,adTinyInt,adParamInput,1,request.form("cand_dismissed_i"))
+ if len(request.form("cand_dismissed_m")) then
+ obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_dismissed_m" ,adLongVarChar,adParamInput,10000,request.form("cand_dismissed_m"))
+else
+ obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_dismissed_m" ,adLongVarChar,adParamInput,10000,NULL)
+end if
+    
+     obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_resigned_i" ,adTinyInt,adParamInput,1,request.form("cand_resigned_i"))
+     if len(request.form("cand_resigned_m")) then
+ obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_resigned_m" ,adLongVarChar,adParamInput,10000,request.form("cand_resigned_m"))
+else
+ obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_resigned_m" ,adLongVarChar,adParamInput,10000,NULL)
+end if
+         obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_nameinclude_i" ,adTinyInt,adParamInput,1,request.form("cand_nameinclude_i"))
+     if len(request.form("cand_nameinclude_UN")) then
+ obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_nameinclude_UN" ,adLongVarChar,adParamInput,10000,request.form("cand_nameinclude_UN"))
+else
+ obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_nameinclude_UN" ,adLongVarChar,adParamInput,10000,NULL)
+end if
+
+ obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_sexual_i" ,adTinyInt,adParamInput,1,request.form("cand_sexual_i"))
+     if len(request.form("cand_resigned_m")) then
+ obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_sexual_m" ,adLongVarChar,adParamInput,10000,request.form("cand_sexual_m"))
+else
+ obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_sexual_m" ,adLongVarChar,adParamInput,10000,NULL)
+end if
+
+obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_teriminated_i" ,adTinyInt,adParamInput,1,request.form("cand_teriminated_i"))
+if len(request.form("cand_resigned_m")) then
+obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_terminated_m" ,adLongVarChar,adParamInput,10000,request.form("cand_terminated_m"))
+else
+ obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_terminated_m" ,adLongVarChar,adParamInput,10000,NULL)
+end if
+
+
  obj_db_CmdI.Parameters.Append obj_db_CmdI.CreateParameter("@cand_id_c" ,adInteger ,adParamInput,4,session("RSYS_EVAL"))
+
+  
+
  Set updFooter = obj_db_CmdI.Execute()
 
  set obj_db_CmdII = server.CreateObject("adodb.command")
@@ -561,7 +599,7 @@ end if
 
 
   '<<--Modified by Interface on 05/01/2007
-  JAPYsql = "SELECT upd_d, cand_fnam_t, cand_lnam_t, cand_fil_t, cand_fil_d, cand_verif_name_t, cand_law_i, cand_law_m 	FROM td_rsys_cand WHERE cand_id_c = ?"
+  JAPYsql = "SELECT upd_d, cand_fnam_t, cand_lnam_t, cand_fil_t, cand_fil_d, cand_verif_name_t, cand_law_i, cand_law_m,cand_dismissed_i, cand_dismissed_m,cand_resigned_i,cand_resigned_m,cand_nameinclude_i,cand_nameinclude_UN,cand_sexual_m,cand_sexual_i,cand_terminated_m,cand_teriminated_i  	FROM td_rsys_cand WHERE cand_id_c = ?"
   obj_db_select_CmdIII.CommandText = JAPYsql
   Set JAPY = obj_db_select_CmdIII.Execute(,Array(session("RSYS_EVAL")))
   '-->>
@@ -597,21 +635,132 @@ end if
 
 
 $(document).ready(function(){
-     if (document.data.cand_law_i.value =="0")
-     {   document.data.cand_law_m.readOnly = true; document.data.cand_law_m.disabled = true; }
-           if (document.data.cand_law_i.value =="1")
-                 { document.data.cand_law_m.readOnly = false; document.data.cand_law_m.disabled = false;}
+    
+	
+	
+if (document.data.cand_sexual_i.value =="0" || document.data.cand_sexual_i.value =="")
+  {   
+          document.data.cand_sexual_m.style.display = "none";  document.getElementById("span4").style.display = "none";
+  }
+else if (document.data.cand_sexual_i.value =="1")
+  { 
+    document.data.cand_sexual_m.style.display = "block";document.getElementById("span4").style.display = "block";
+  }
+
+
+ $("#cand_sexual_i").change(function(){
+    if (document.data.cand_sexual_i.value =="0" || document.data.cand_sexual_i.value =="")
+              {  document.data.cand_sexual_m.style.display = "none";  document.getElementById("span4").style.display = "none";}
+        if (document.data.cand_sexual_i.value =="1")
+               {  document.data.cand_sexual_m.style.display = "block";document.getElementById("span4").style.display = "block";}
+    
+ });
+
+
+	if (document.data.cand_teriminated_i.value =="0" || document.data.cand_teriminated_i.value =="")
+  {   
+          document.data.cand_terminated_m.style.display = "none";  document.getElementById("span5").style.display = "none";
+  }
+else if (document.data.cand_teriminated_i.value =="1")
+  { 
+    document.data.cand_terminated_m.style.display = "block";document.getElementById("span5").style.display = "block";
+  }
+
+
+ $("#cand_teriminated_i").change(function(){
+    if (document.data.cand_teriminated_i.value =="0" || document.data.cand_teriminated_i.value =="")
+              {  document.data.cand_terminated_m.style.display = "none";  document.getElementById("span5").style.display = "none";}
+        if (document.data.cand_teriminated_i.value =="1")
+               {  document.data.cand_terminated_m.style.display = "block";document.getElementById("span5").style.display = "block";}
+    
+ });
+	
+	
+	if (document.data.cand_law_i.value =="0" || document.data.cand_law_i.value =="")
+     {   
+             document.data.cand_law_m.style.display = "none";  document.getElementById("span_law_anw").style.display = "none";
+     }
+   else if (document.data.cand_law_i.value =="1")
+     { 
+       document.data.cand_law_m.style.display = "block";document.getElementById("span_law_anw").style.display = "block";
+     }
+
    
     $("#cand_law_i").change(function(){
        if (document.data.cand_law_i.value =="0" || document.data.cand_law_i.value =="")
-                 { document.data.cand_law_m.readOnly = true; document.data.cand_law_m.disabled = true;}
+                 {  document.data.cand_law_m.style.display = "none";  document.getElementById("span_law_anw").style.display = "none";}
            if (document.data.cand_law_i.value =="1")
-                  { document.data.cand_law_m.readOnly = false;  document.data.cand_law_m.disabled = false;}
+                  {  document.data.cand_law_m.style.display = "block";document.getElementById("span_law_anw").style.display = "block";}
                   
 
        
        
     });
+    
+     if (document.data.cand_dismissed_i.value =="0" || document.data.cand_dismissed_i.value =="")
+     {   
+	  document.data.cand_dismissed_m.style.display = "none";  document.getElementById("span1").style.display = "none";
+     }
+     if (document.data.cand_dismissed_i.value =="1")
+     { 
+         document.data.cand_dismissed_m.style.display = "block";  document.getElementById("span1").style.display = "block";
+     }
+   
+    $("#cand_dismissed_i").change(function(){
+       if (document.data.cand_dismissed_i.value =="0" || document.data.cand_dismissed_i.value =="")
+                 {  document.data.cand_dismissed_m.style.display = "none";  document.getElementById("span1").style.display = "none";}
+           if (document.data.cand_dismissed_i.value =="1")
+                  { document.data.cand_dismissed_m.style.display = "block";  document.getElementById("span1").style.display = "block";}
+                  
+
+       
+       
+    });
+
+       if (document.data.cand_resigned_i.value =="0" || document.data.cand_resigned_i.value =="")
+     {   
+            
+	       document.data.cand_resigned_m.style.display = "none";  document.getElementById("span2").style.display = "none";
+     }
+     if (document.data.cand_resigned_i.value =="1")
+     { 
+         document.data.cand_resigned_m.style.display = "block";  document.getElementById("span2").style.display = "block";
+     }
+   
+    $("#cand_resigned_i").change(function(){
+       if (document.data.cand_resigned_i.value =="0" || document.data.cand_resigned_i.value =="")
+                 { document.data.cand_resigned_m.style.display = "none";  document.getElementById("span2").style.display = "none";}
+           if (document.data.cand_resigned_i.value =="1")
+                  { document.data.cand_resigned_m.style.display = "block";  document.getElementById("span2").style.display = "block";;}
+                  
+
+       
+       
+    });
+
+      if (document.data.cand_nameinclude_i.value =="0" || document.data.cand_nameinclude_i.value =="")
+     {   
+          
+	 document.data.cand_nameinclude_UN.style.display = "none";  document.getElementById("span3").style.display = "none";
+     }
+     if (document.data.cand_nameinclude_i.value =="1")
+     { 
+   document.data.cand_nameinclude_UN.style.display = "block";  document.getElementById("span3").style.display = "block";
+     }
+   
+    $("#cand_nameinclude_i").change(function(){
+       if (document.data.cand_nameinclude_i.value =="0" || document.data.cand_nameinclude_i.value =="")
+                 { 	 document.data.cand_nameinclude_UN.style.display = "none";  document.getElementById("span3").style.display = "none";}
+           if (document.data.cand_nameinclude_i.value =="1")
+                  {    document.data.cand_nameinclude_UN.style.display = "block";  document.getElementById("span3").style.display = "block";}
+                  
+
+       
+       
+    });
+
+
+
 });
 function DataValidation()
 
@@ -646,11 +795,11 @@ function DataValidation()
             });
 
 
-    //       manoj changes 
+//    'manoj changes 
 
-    
-    	// Modified by Interface on 07/23/2007
-		// To prevent 'script' to be included in text.
+//    
+//    	' Modified by Interface on 07/23/2007
+//		' To prevent 'script' to be included in text.
 	    if(!ValidateForm(document.forms[0]))
 		{
 			return false;
@@ -699,8 +848,41 @@ else
             alert("<% response.write gVText("i_70")%>");
 			document.data.cand_law_i.focus();
             return false;
-        }
+	     }
+	     if (document.data.cand_sexual_i.value == "") {
+			   alert("<% response.write gVText("i_70")%>");
+			document.data.cand_sexual_i.focus();
+			   return false;
+	 }
 
+	    if (document.data.cand_dismissed_i.value == "") {
+	   alert("<% response.write gVText("i_70")%>");
+	document.data.cand_dismissed_i.focus();
+	   return false;
+}
+
+
+	
+
+	    if (document.data.cand_teriminated_i.value == "") {
+	   alert("<% response.write gVText("i_70")%>");
+	document.data.cand_teriminated_i.focus();
+	   return false;
+	 }
+	
+	    if (document.data.cand_resigned_i.value == "") {
+	   alert("<% response.write gVText("i_70")%>");
+	document.data.cand_resigned_i.focus();
+	   return false;
+	 }
+	
+	    if (document.data.cand_nameinclude_i.value == "") {
+	   alert("<% response.write gVText("i_70")%>");
+	document.data.cand_nameinclude_i.focus();
+	   return false;
+
+        
+	 }
 	<%end if
 
      if session("template_org_code") = 1500 then %>
@@ -713,6 +895,34 @@ else
             return false;
            }
         }
+      if (document.data.cand_dismissed_i.value == 1)
+        {
+           if (document.data.cand_dismissed_m.value == "")
+           {
+            alert("<% response.write gVText("i_72")%>");
+			document.data.cand_dismissed_m.focus();
+            return false;
+           }
+        }
+      if (document.data.cand_resigned_i.value == 1)
+        {
+           if (document.data.cand_resigned_m.value == "")
+           {
+            alert("<% response.write gVText("i_72")%>");
+			document.data.cand_resigned_m.focus();
+            return false;
+           }
+        }
+      if (document.data.cand_nameinclude_i.value == 1)
+        {
+           if (document.data.cand_nameinclude_UN.value == "")
+           {
+            alert("<% response.write gVText("i_72")%>");
+			document.data.cand_nameinclude_UN.focus();
+            return false;
+           }
+        }
+
      <%end if
 
 end if%>
@@ -728,9 +938,35 @@ end if%>
            }
        }
 
+       if (document.data.cand_dismissed_i.value == 1)
+        {
+           if (document.data.cand_dismissed_m.value == "")
+           {
+            alert("<% response.write gVText("i_72")%>");
+			document.data.cand_dismissed_m.focus();
+            return false;
+           }
+        }
+     if (document.data.cand_resigned_i.value == 1)
+        {
+           if (document.data.cand_resigned_m.value == "")
+           {
+            alert("<% response.write gVText("i_72")%>");
+			document.data.cand_resigned_m.focus();
+            return false;
+           }
+        }
       
 		
-		
+		if (document.data.cand_nameinclude_i.value == 1)
+        {
+           if (document.data.cand_nameinclude_UN.value == "")
+           {
+            alert("<% response.write gVText("i_72")%>");
+			document.data.cand_nameinclude_UN.focus();
+            return false;
+           }
+        }
 		
         
 
@@ -1263,6 +1499,38 @@ if Request.form("postadding") = "1" then
 	'set Logss = rsys_logs.execute(Logsssql)
 else
 	
+  '<!---  manoj added info for sexual misconducted 29 june changing the order -->
+    if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 2900) AND NOT Request.form("GOEDITV") = "99" then
+%>
+
+<tr>
+	<td valign="top" class="text" colspan="2"><%=gVText("i_97")%>
+	<br><br>
+    <select  id="cand_sexual_i" name="cand_sexual_i">
+    <%
+    
+    'if len( trim(JAPY("cand_law_i")) ) then ///>
+    if trim(JAPY("cand_sexual_i")) >= 0 then %>
+    <option value=""><%=gVText("i_71")%>
+    <option value="1" <% If trim(JAPY("cand_sexual_i")) = "1" then%> SELECTED<% End If%> ><%=gVText("i_18")%>
+    <option value="0" <% If trim(JAPY("cand_sexual_i")) = "0" then%> SELECTED<% End If%> ><%=gVText("i_19")%>
+    <%else%>
+    <option value="" SELECTED><%=gVText("i_71")%>
+    <option value="1"><%=gVText("i_18")%>
+    <option value="0"><%=gVText("i_19")%>
+    <%end if%>
+    </select></TD>
+</TR>
+<tr>
+    <td valign="top" colspan="2"><br><span id="span4"><%=gVText("i_12")%></span><Br>
+    <textarea  wrap="soft" ROWS="3" NAME="cand_sexual_m" COLS="50"><% response.write JAPY("cand_sexual_m")%></TEXTAREA><br><br></td>
+</tr>
+<%end if
+
+
+'sexual misconducted reason end here
+
+
 	'01 SEP 15 LJL moved WMO law section to Other info section
 if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 2900) AND NOT Request.form("GOEDITV") = "99" then
 %>
@@ -1290,6 +1558,145 @@ if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 29
     <textarea  wrap="soft" ROWS="3" NAME="cand_law_m" COLS="50"><% response.write JAPY("cand_law_m")%></TEXTAREA><br><br></td>
 </tr>
 <%end if
+
+	'law secion end here
+
+   
+
+'<!---  manoj added info for terminated reason  -->
+    if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 2900) AND NOT Request.form("GOEDITV") = "99" then
+%>
+
+<tr>
+	<td valign="top" class="text" colspan="2"><%=gVText("i_98")%>
+	<br><br>
+    <select  id="cand_teriminated_i" name="cand_teriminated_i">
+    <%
+    
+    'if len( trim(JAPY("cand_law_i")) ) then ///>
+    if trim(JAPY("cand_teriminated_i")) >= 0 then %>
+    <option value=""><%=gVText("i_71")%>
+    <option value="1" <% If trim(JAPY("cand_teriminated_i")) = "1" then%> SELECTED<% End If%> ><%=gVText("i_18")%>
+    <option value="0" <% If trim(JAPY("cand_teriminated_i")) = "0" then%> SELECTED<% End If%> ><%=gVText("i_19")%>
+    <%else%>
+    <option value="" SELECTED><%=gVText("i_71")%>
+    <option value="1"><%=gVText("i_18")%>
+    <option value="0"><%=gVText("i_19")%>
+    <%end if%>
+    </select></TD>
+</TR>
+<tr>
+    <td valign="top" colspan="2"><br><span id="span5"><%=gVText("i_12")%></span><Br>
+    <textarea  wrap="soft" ROWS="3" NAME="cand_terminated_m" COLS="50"><% response.write JAPY("cand_terminated_m")%></TEXTAREA><br><br></td>
+</tr>
+<%end if
+
+
+'terminated  reason end here
+
+
+
+
+
+
+
+'<!---  manoj added info for Dismissed  -->
+    if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 2900) AND NOT Request.form("GOEDITV") = "99" then
+%>
+
+<tr>
+	<td valign="top" class="text" colspan="2"><%=gVText("i_94")%>
+	<br><br>
+    <select  id="cand_dismissed_i" name="cand_dismissed_i">
+    <%
+    
+    'if len( trim(JAPY("cand_law_i")) ) then ///>
+    if trim(JAPY("cand_dismissed_i")) >= 0 then %>
+    <option value=""><%=gVText("i_71")%>
+    <option value="1" <% If trim(JAPY("cand_dismissed_i")) = "1" then%> SELECTED<% End If%> ><%=gVText("i_18")%>
+    <option value="0" <% If trim(JAPY("cand_dismissed_i")) = "0" then%> SELECTED<% End If%> ><%=gVText("i_19")%>
+    <%else%>
+    <option value="" SELECTED><%=gVText("i_71")%>
+    <option value="1"><%=gVText("i_18")%>
+    <option value="0"><%=gVText("i_19")%>
+    <%end if%>
+    </select></TD>
+</TR>
+<tr>
+    <td valign="top" colspan="2"><br><span id="span1"><%=gVText("i_12")%></span><Br>
+    <textarea  wrap="soft" ROWS="3" NAME="cand_dismissed_m" COLS="50"><% response.write JAPY("cand_dismissed_m")%></TEXTAREA><br><br></td>
+</tr>
+<%end if
+
+
+'dismissed reason end here
+
+    '<!---  manoj added info for resigned  -->
+    if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 2900) AND NOT Request.form("GOEDITV") = "99" then
+%>
+
+<tr>
+	<td valign="top" class="text" colspan="2"><%=gVText("i_95")%>
+	<br><br>
+    <select  id="cand_resigned_i" name="cand_resigned_i">
+    <%
+    
+    'if len( trim(JAPY("cand_law_i")) ) then ///>
+    if trim(JAPY("cand_resigned_i")) >= 0 then %>
+    <option value=""><%=gVText("i_71")%>
+    <option value="1" <% If trim(JAPY("cand_resigned_i")) = "1" then%> SELECTED<% End If%> ><%=gVText("i_18")%>
+    <option value="0" <% If trim(JAPY("cand_resigned_i")) = "0" then%> SELECTED<% End If%> ><%=gVText("i_19")%>
+    <%else%>
+    <option value="" SELECTED><%=gVText("i_71")%>
+    <option value="1"><%=gVText("i_18")%>
+    <option value="0"><%=gVText("i_19")%>
+    <%end if%>
+    </select></TD>
+</TR>
+<tr>
+    <td valign="top" colspan="2"><br><span id="span2"><%=gVText("i_12")%></span><Br>
+    <textarea  wrap="soft" ROWS="3" NAME="cand_resigned_m" COLS="50"><% response.write JAPY("cand_resigned_m")%></TEXTAREA><br><br></td>
+</tr>
+<%end if
+
+
+'resigned reason end here
+
+
+     '<!---  manoj added info for name include in un  -->
+    if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 2900) AND NOT Request.form("GOEDITV") = "99" then
+%>
+
+<tr>
+	<td valign="top" class="text" colspan="2"><%=gVText("i_96")%>
+	<br><br>
+    <select  id="cand_nameinclude_i" name="cand_nameinclude_i">
+    <%
+    
+    'if len( trim(JAPY("cand_law_i")) ) then ///>
+    if trim(JAPY("cand_nameinclude_i")) >= 0 then %>
+    <option value=""><%=gVText("i_71")%>
+    <option value="1" <% If trim(JAPY("cand_nameinclude_i")) = "1" then%> SELECTED<% End If%> ><%=gVText("i_18")%>
+    <option value="0" <% If trim(JAPY("cand_nameinclude_i")) = "0" then%> SELECTED<% End If%> ><%=gVText("i_19")%>
+    <%else%>
+    <option value="" SELECTED><%=gVText("i_71")%>
+    <option value="1"><%=gVText("i_18")%>
+    <option value="0"><%=gVText("i_19")%>
+    <%end if%>
+    </select></TD>
+</TR>
+<tr>
+    <td valign="top" colspan="2"><br><span id="span3"><%=gVText("i_12")%></span><Br>
+    <textarea  wrap="soft" ROWS="3" NAME="cand_nameinclude_UN" COLS="50"><% response.write JAPY("cand_nameinclude_UN")%></TEXTAREA><br><br></td>
+</tr>
+<%end if
+
+
+'resigned reason end here
+
+
+
+
 end if
 '      <!------------ ILO ADD 21 OCT 02 --------------->
 if Request.form("postadding") = 1 then
@@ -1692,7 +2099,7 @@ Signcount = int(japinfo2("EditFooter") + 1)%>
 <%end if ' END not showing the verif page if the person has just submitted it.
 end if%>
 </TABLE>
-<%pv_last_update="23 Mar 16"
+<%pv_last_update="26 Mar 2023"
 '<<--Modified by Interface on 05/29/2007
 set obj_int_select_Cmd = nothing
 set obj_db_select_Cmd = nothing
