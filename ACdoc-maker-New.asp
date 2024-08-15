@@ -5693,10 +5693,10 @@ if instr(pv_parts,"V,") then
     ' Name included
     f.WriteLine gITEXTV("i_96")
     f.WriteLine "<p><br></p>"
-    if trim(JAPY("cand_nameinclude_i")) = "1" then  
-        f.WriteLine "<b>" & gITEXTV("i_18")  & " , " & JAPY("cand_nameinclude_UN") & "</b>"
+    if trim(JAPY("cand_nameinclude_i")) = "0" then  
+        f.WriteLine "<b>" & gITEXTV("i_19")  & " , " & JAPY("cand_nameinclude_UN") & "</b>"
     else
-        f.WriteLine "<b>" & gITEXTV("i_19") & "</b>"
+        f.WriteLine "<b>" & gITEXTV("i_18") & "</b>"
     end if
     f.WriteLine "<p><br></p>"
 
