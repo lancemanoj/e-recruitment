@@ -80,6 +80,12 @@ if session("lng") = "fr" then
 '03 SEP 15 LJL added OI check for WMO
 '22 Feb 16 LJL/MC Add emergency resource avail dates for WHO specific VNs
 '26 March 2023 Manoj added Dismiss ,resigned and name include in UN fields to this form and validation
+'14 AUG 24 LJL added new UNAIDS questions to WMO version, except for Question 1, which is in Other Information page.
+'15 AUG 24 LJL added NOT as select message for last question UN check list NOT in list i_28
+'15 AUG 24 LJL took out the PLEASE SELECT from the WMO acknowledgement questions after initially answered
+
+
+
 
 ' SET TO HAVE LEFT MENU
 pv_col2right = "1"
@@ -115,7 +121,9 @@ dim obj_int_select_Cmd10
  obj_int_select_Cmd10.ActiveConnection = rsys_int_select
 '<<--Modified by Interface on 05/01/2007
 '22 Feb 16 LJL/MC Add emergency resource avail dates for WHO specific VNs
-gVTextsql = "SELECT i_1, i_3, i_4, i_5, i_7, i_8, i_9, i_11, i_12, i_13, i_14, i_15, i_18, i_19, i_20, I_32, i_33, i_34, i_40, i_44, i_45, I_46, i_47, i_48, i_50, i_55, i_61, i_62, i_64, i_70, i_71, i_72, i_80, i_81, i_82, i_83, i_84, i_text1, i_text2, i_text3,i_94,i_95,i_96,i_97,i_98  FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'V' "
+
+'15 AUG 24 LJL added NOT as select message for last question UN check list NOT in list i_28
+gVTextsql = "SELECT i_1, i_3, i_4, i_5, i_7, i_8, i_9, i_11, i_12, i_13, i_14, i_15, i_18, i_19, i_20, i_28, I_32, i_33, i_34, i_40, i_44, i_45, I_46, i_47, i_48, i_50, i_55, i_61, i_62, i_64, i_70, i_71, i_72, i_80, i_81, i_82, i_83, i_84, i_text1, i_text2, i_text3,i_94,i_95,i_96,i_97,i_98  FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'V' "
 obj_int_select_Cmd10.CommandText = gVTextsql
 Set gVText = obj_int_select_Cmd10.Execute(,Array(session("template_org_code"),session("lng")))
 '-->>
@@ -738,20 +746,20 @@ else if (document.data.cand_teriminated_i.value =="1")
        
     });
 
-      if (document.data.cand_nameinclude_i.value =="0" || document.data.cand_nameinclude_i.value =="")
+      if (document.data.cand_nameinclude_i.value =="1" || document.data.cand_nameinclude_i.value =="")
      {   
           
 	 document.data.cand_nameinclude_UN.style.display = "none";  document.getElementById("span3").style.display = "none";
      }
-     if (document.data.cand_nameinclude_i.value =="1")
+     if (document.data.cand_nameinclude_i.value =="0")
      { 
    document.data.cand_nameinclude_UN.style.display = "block";  document.getElementById("span3").style.display = "block";
      }
    
     $("#cand_nameinclude_i").change(function(){
-       if (document.data.cand_nameinclude_i.value =="0" || document.data.cand_nameinclude_i.value =="")
+       if (document.data.cand_nameinclude_i.value =="1" || document.data.cand_nameinclude_i.value =="")
                  { 	 document.data.cand_nameinclude_UN.style.display = "none";  document.getElementById("span3").style.display = "none";}
-           if (document.data.cand_nameinclude_i.value =="1")
+           if (document.data.cand_nameinclude_i.value =="0")
                   {    document.data.cand_nameinclude_UN.style.display = "block";  document.getElementById("span3").style.display = "block";}
                   
 
@@ -913,7 +921,7 @@ else
             return false;
            }
         }
-      if (document.data.cand_nameinclude_i.value == 1)
+      if (document.data.cand_nameinclude_i.value == 0)
         {
            if (document.data.cand_nameinclude_UN.value == "")
            {
@@ -958,7 +966,7 @@ end if%>
         }
       
 		
-		if (document.data.cand_nameinclude_i.value == 1)
+		if (document.data.cand_nameinclude_i.value == 0)
         {
            if (document.data.cand_nameinclude_UN.value == "")
            {
@@ -1500,7 +1508,7 @@ if Request.form("postadding") = "1" then
 else
 	
   '<!---  manoj added info for sexual misconducted 29 june changing the order -->
-    if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 2900) AND NOT Request.form("GOEDITV") = "99" then
+    if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 9900) AND NOT Request.form("GOEDITV") = "99" then
 %>
 
 <tr>
@@ -1511,7 +1519,6 @@ else
     
     'if len( trim(JAPY("cand_law_i")) ) then ///>
     if trim(JAPY("cand_sexual_i")) >= 0 then %>
-    <option value=""><%=gVText("i_71")%>
     <option value="1" <% If trim(JAPY("cand_sexual_i")) = "1" then%> SELECTED<% End If%> ><%=gVText("i_18")%>
     <option value="0" <% If trim(JAPY("cand_sexual_i")) = "0" then%> SELECTED<% End If%> ><%=gVText("i_19")%>
     <%else%>
@@ -1522,7 +1529,7 @@ else
     </select></TD>
 </TR>
 <tr>
-    <td valign="top" colspan="2"><br><span id="span4"><%=gVText("i_12")%></span><Br>
+    <td valign="top" colspan="2"><br><span id="span4"><strong><%=gVText("i_12")%></strong></span><Br>
     <textarea  wrap="soft" ROWS="3" NAME="cand_sexual_m" COLS="50"><% response.write JAPY("cand_sexual_m")%></TEXTAREA><br><br></td>
 </tr>
 <%end if
@@ -1532,7 +1539,7 @@ else
 
 
 	'01 SEP 15 LJL moved WMO law section to Other info section
-if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 2900) AND NOT Request.form("GOEDITV") = "99" then
+if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 9900) AND NOT Request.form("GOEDITV") = "99" then
 %>
 
 <tr>
@@ -1543,7 +1550,6 @@ if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 29
     //Modified on 08/13/2008 , to display previously selected answer.
     'if len( trim(JAPY("cand_law_i")) ) then ///>
     if trim(JAPY("cand_law_i")) >= 0 then %>
-    <option value=""><%=gVText("i_71")%>
     <option value="1" <% If trim(JAPY("cand_law_i")) = "1" then%> SELECTED<% End If%> ><%=gVText("i_18")%>
     <option value="0" <% If trim(JAPY("cand_law_i")) = "0" then%> SELECTED<% End If%> ><%=gVText("i_19")%>
     <%else%>
@@ -1554,7 +1560,7 @@ if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 29
     </select></TD>
 </TR>
 <tr>
-    <td valign="top" colspan="2"><br><span id="span_law_anw"><%=gVText("i_12")%></span><Br>
+    <td valign="top" colspan="2"><br><span id="span_law_anw"><strong><%=gVText("i_12")%></strong></span><Br>
     <textarea  wrap="soft" ROWS="3" NAME="cand_law_m" COLS="50"><% response.write JAPY("cand_law_m")%></TEXTAREA><br><br></td>
 </tr>
 <%end if
@@ -1564,7 +1570,7 @@ if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 29
    
 
 '<!---  manoj added info for terminated reason  -->
-    if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 2900) AND NOT Request.form("GOEDITV") = "99" then
+    if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 9900) AND NOT Request.form("GOEDITV") = "99" then
 %>
 
 <tr>
@@ -1575,7 +1581,6 @@ if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 29
     
     'if len( trim(JAPY("cand_law_i")) ) then ///>
     if trim(JAPY("cand_teriminated_i")) >= 0 then %>
-    <option value=""><%=gVText("i_71")%>
     <option value="1" <% If trim(JAPY("cand_teriminated_i")) = "1" then%> SELECTED<% End If%> ><%=gVText("i_18")%>
     <option value="0" <% If trim(JAPY("cand_teriminated_i")) = "0" then%> SELECTED<% End If%> ><%=gVText("i_19")%>
     <%else%>
@@ -1586,7 +1591,7 @@ if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 29
     </select></TD>
 </TR>
 <tr>
-    <td valign="top" colspan="2"><br><span id="span5"><%=gVText("i_12")%></span><Br>
+    <td valign="top" colspan="2"><br><span id="span5"><strong><%=gVText("i_12")%></strong></span><Br>
     <textarea  wrap="soft" ROWS="3" NAME="cand_terminated_m" COLS="50"><% response.write JAPY("cand_terminated_m")%></TEXTAREA><br><br></td>
 </tr>
 <%end if
@@ -1601,7 +1606,7 @@ if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 29
 
 
 '<!---  manoj added info for Dismissed  -->
-    if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 2900) AND NOT Request.form("GOEDITV") = "99" then
+    if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 9900) AND NOT Request.form("GOEDITV") = "99" then
 %>
 
 <tr>
@@ -1612,7 +1617,6 @@ if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 29
     
     'if len( trim(JAPY("cand_law_i")) ) then ///>
     if trim(JAPY("cand_dismissed_i")) >= 0 then %>
-    <option value=""><%=gVText("i_71")%>
     <option value="1" <% If trim(JAPY("cand_dismissed_i")) = "1" then%> SELECTED<% End If%> ><%=gVText("i_18")%>
     <option value="0" <% If trim(JAPY("cand_dismissed_i")) = "0" then%> SELECTED<% End If%> ><%=gVText("i_19")%>
     <%else%>
@@ -1623,7 +1627,7 @@ if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 29
     </select></TD>
 </TR>
 <tr>
-    <td valign="top" colspan="2"><br><span id="span1"><%=gVText("i_12")%></span><Br>
+    <td valign="top" colspan="2"><br><span id="span1"><strong><%=gVText("i_12")%></strong></span><Br>
     <textarea  wrap="soft" ROWS="3" NAME="cand_dismissed_m" COLS="50"><% response.write JAPY("cand_dismissed_m")%></TEXTAREA><br><br></td>
 </tr>
 <%end if
@@ -1632,7 +1636,7 @@ if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 29
 'dismissed reason end here
 
     '<!---  manoj added info for resigned  -->
-    if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 2900) AND NOT Request.form("GOEDITV") = "99" then
+    if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 9900) AND NOT Request.form("GOEDITV") = "99" then
 %>
 
 <tr>
@@ -1643,8 +1647,7 @@ if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 29
     
     'if len( trim(JAPY("cand_law_i")) ) then ///>
     if trim(JAPY("cand_resigned_i")) >= 0 then %>
-    <option value=""><%=gVText("i_71")%>
-    <option value="1" <% If trim(JAPY("cand_resigned_i")) = "1" then%> SELECTED<% End If%> ><%=gVText("i_18")%>
+     <option value="1" <% If trim(JAPY("cand_resigned_i")) = "1" then%> SELECTED<% End If%> ><%=gVText("i_18")%>
     <option value="0" <% If trim(JAPY("cand_resigned_i")) = "0" then%> SELECTED<% End If%> ><%=gVText("i_19")%>
     <%else%>
     <option value="" SELECTED><%=gVText("i_71")%>
@@ -1654,7 +1657,7 @@ if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 29
     </select></TD>
 </TR>
 <tr>
-    <td valign="top" colspan="2"><br><span id="span2"><%=gVText("i_12")%></span><Br>
+    <td valign="top" colspan="2"><br><span id="span2"><strong><%=gVText("i_12")%></strong></span><Br>
     <textarea  wrap="soft" ROWS="3" NAME="cand_resigned_m" COLS="50"><% response.write JAPY("cand_resigned_m")%></TEXTAREA><br><br></td>
 </tr>
 <%end if
@@ -1664,7 +1667,7 @@ if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 29
 
 
      '<!---  manoj added info for name include in un  -->
-    if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 2900) AND NOT Request.form("GOEDITV") = "99" then
+    if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 9900) AND NOT Request.form("GOEDITV") = "99" then
 %>
 
 <tr>
@@ -1672,11 +1675,11 @@ if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 29
 	<br><br>
     <select  id="cand_nameinclude_i" name="cand_nameinclude_i">
     <%
-    
+   '15 AUG 24 LJL added NOT as select message for last question UN check list NOT in list i_28 from i_12 below
+ 
     'if len( trim(JAPY("cand_law_i")) ) then ///>
     if trim(JAPY("cand_nameinclude_i")) >= 0 then %>
-    <option value=""><%=gVText("i_71")%>
-    <option value="1" <% If trim(JAPY("cand_nameinclude_i")) = "1" then%> SELECTED<% End If%> ><%=gVText("i_18")%>
+     <option value="1" <% If trim(JAPY("cand_nameinclude_i")) = "1" then%> SELECTED<% End If%> ><%=gVText("i_18")%>
     <option value="0" <% If trim(JAPY("cand_nameinclude_i")) = "0" then%> SELECTED<% End If%> ><%=gVText("i_19")%>
     <%else%>
     <option value="" SELECTED><%=gVText("i_71")%>
@@ -1686,7 +1689,7 @@ if  (session("template_org_code") <> 3000 AND session("template_org_code") <> 29
     </select></TD>
 </TR>
 <tr>
-    <td valign="top" colspan="2"><br><span id="span3"><%=gVText("i_12")%></span><Br>
+    <td valign="top" colspan="2"><br><span id="span3"><strong><%=gVText("i_28")%></strong></span><Br>
     <textarea  wrap="soft" ROWS="3" NAME="cand_nameinclude_UN" COLS="50"><% response.write JAPY("cand_nameinclude_UN")%></TEXTAREA><br><br></td>
 </tr>
 <%end if
@@ -2099,7 +2102,7 @@ Signcount = int(japinfo2("EditFooter") + 1)%>
 <%end if ' END not showing the verif page if the person has just submitted it.
 end if%>
 </TABLE>
-<%pv_last_update="26 Mar 2023"
+<%pv_last_update="15 Aug 24"
 '<<--Modified by Interface on 05/29/2007
 set obj_int_select_Cmd = nothing
 set obj_db_select_Cmd = nothing
