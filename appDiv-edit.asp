@@ -61,7 +61,7 @@ dim currentYear, pv_candidD
 ' BEGIN INCLUDE TEXT
 dim gITEXTsql, gITEXT
 '<<--Modified by Interface on 05/02/2007
-gITEXTsql = "SELECT i_1, i_4, i_23, i_text1, i_27,i_5, i_16, i_17, i_18,i_32,i_15, i_9,i_11, i_10,i_19, i_20, i_29,i_30, i_22, i_21,i_13,i_76, i_87,i_88,i_89,i_91,i_92,i_93,i_94 FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'Div' "
+gITEXTsql = "SELECT i_1, i_4, i_23, i_text1, i_27,i_5, i_16, i_17, i_18,i_32,i_15, i_9,i_11, i_10,i_19, i_20, i_29,i_30, i_22, i_21,i_13,i_76, i_87,i_88,i_89,i_91,i_92,i_93,i_94,i_95,i_96,i_97,i_98,i_99 FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'Div' "
 obj_int_select_Cmd.CommandText = gITEXTsql
 Set gITEXT = obj_int_select_Cmd.Execute(,Array(session("template_org_code"),session("lng")))
 '-->>
@@ -123,7 +123,7 @@ Set JAPINFO2 = obj_db_select_CmdI.Execute(,Array(pv_candidD))
 
 set obj_db_select_Cmd3 = server.CreateObject("adodb.command")
   obj_db_select_Cmd3.ActiveConnection = rsys_db_select
-JAPINFO3sql = "SELECT canddiv_pronoun_id FROM tx_rsys_candmisc WHERE cand_id_c = ? "
+JAPINFO3sql = "SELECT canddiv_pronoun_id,cand_div_race_ethnicity,cand_div_disability, cand_div_key_population FROM tx_rsys_candmisc WHERE cand_id_c = ? "
 obj_db_select_Cmd3.CommandText = JAPINFO3sql
 
 'response.write JAPINFO3sql
@@ -226,19 +226,7 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
         </tr>
       
 
-          		<!-- Gender Identity -->
-          	<!--	<tr>
-            	<td valign='top'>Gender identity (optional):</td>
-            	<td valign='top'>
-                <select name="cand_div_gender_identity">
-                    <option value="">Select</option>
-                    <option value="Male" <% If JAPY("cand_div_gender_identity") = "Male" Then Response.Write("selected") %>>Male</option>
-                    <option value="Female" <% If JAPY("cand_div_gender_identity") = "Female" Then Response.Write("selected") %>>Female</option>
-                    <option value="Non-binary" <% If JAPY("cand_div_gender_identity") = "Non-binary" Then Response.Write("selected") %>>Non-binary</option>
-                    <option value="Other" <% If JAPY("cand_div_gender_identity") = "Other" Then Response.Write("selected") %>>Other</option>
-                </select>
-            	</td>
-            </tr>-->
+          		
           <TR>
     <td><% response.write gITEXT("i_87")%><FONT SIZE='4' COLOR='Red'>*</FONT> </td>
     <td>
@@ -265,20 +253,31 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
 
 
           		<!-- Race/Ethnicity -->
-          		<tr>
-            	<td valign='top'>Race/Ethnicity (optional):</td>
-            	<td valign='top'>
-                <select name="cand_div_race_ethnicity">
-                    <option value="">Select</option>
-                    <option value="Asian" <% If JAPY("cand_div_race_ethnicity") = "Asian" Then Response.Write("selected") %>>Asian</option>
-                    <option value="Black or African American" <% If JAPY("cand_div_race_ethnicity") = "Black or African American" Then Response.Write("selected") %>>Black or African American</option>
-                    <option value="Hispanic or Latino" <% If JAPY("cand_div_race_ethnicity") = "Hispanic or Latino" Then Response.Write("selected") %>>Hispanic or Latino</option>
-                    <option value="White" <% If JAPY("cand_div_race_ethnicity") = "White" Then Response.Write("selected") %>>White</option>
-                    <option value="Other" <% If JAPY("cand_div_race_ethnicity") = "Other" Then Response.Write("selected") %>>Other</option>
-                </select>
-            	</td>
-            </tr>
+           <tr>
+           	<td><% response.write gITEXT("i_95")%> </td>
 
+           	<td valign='top'>
+            <select name="cand_div_race_ethnicity"  onchange="toggleOther('otherrace_ethnicityTextbox','cand_div_race_ethnicity');" >
+             
+                <option value ="select"> select</option>
+           
+                   <option value="1" <% If JAPINFO3("cand_div_race_ethnicity") = "1" Then Response.Write("selected") %>><% response.write gITEXT("i_96")%></OPTION>
+                   <option value="2" <% If JAPINFO3("cand_div_race_ethnicity") = "2" Then Response.Write("selected") %>><% response.write gITEXT("i_97")%></OPTION>
+                   <option value="3" <% If JAPINFO3("cand_div_race_ethnicity") = "3" Then Response.Write("selected") %>><% response.write gITEXT("i_98")%></OPTION>
+                  <option value="4" <% If JAPINFO3("cand_div_race_ethnicity") = "4" Then Response.Write("selected") %>><% response.write gITEXT("i_99")%></OPTION>
+                     <option value="0" <% If JAPINFO3("cand_div_race_ethnicity") = "0" Then Response.Write("selected") %>><% response.write gITEXT("i_76")%></OPTION>
+            </select>
+
+                         <span id="otherrace_ethnicityTextbox" style="display:none;">
+   
+    
+        <input type="text" placeholder="specify other" name="race_ethnicity"  value="">
+    
+</span>
+
+           	</td>
+        </tr>
+      
           		<!-- Disability Inclusion -->
           		<tr>
             	<td valign='top'>Disability Inclusion (optional):</td>
