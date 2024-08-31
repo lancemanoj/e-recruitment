@@ -158,7 +158,7 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
           var selectedValue = genderDropdown.value;
           var otherTextbox = document.getElementById(textboxId);
           
-          if (selectedValue === "2") { // Assuming "2" corresponds to "Other"
+          if (selectedValue === "0") { // Assuming "2" corresponds to "Other"
               otherTextbox.style.display = "block";
           } else {
               otherTextbox.style.display = "none";
@@ -205,7 +205,7 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
            	<td><% response.write gITEXT("i_91")%><FONT SIZE='4' COLOR='Red'>*</FONT> </td>
 
            	<td valign='top'>
-            <select name="cand_div_pronouns" >
+            <select name="canddiv_pronoun_id"  onchange="toggleOther('otherpronounTextbox','canddiv_pronoun_id');" >
              
                 <option value ="select"> select</option>
            
@@ -214,9 +214,17 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
                    <option value="3" <% If JAPINFO3("canddiv_pronoun_id") = "3" Then Response.Write("selected") %>><% response.write gITEXT("i_94")%></OPTION>
                      <option value="0" <% If JAPINFO3("canddiv_pronoun_id") = "0" Then Response.Write("selected") %>><% response.write gITEXT("i_76")%></OPTION>
             </select>
+
+                         <span id="otherpronounTextbox" style="display:none;">
+   
+    
+        <input type="text" placeholder="specify other" name="cand_other_pronoun"  value="">
+    
+</span>
+
            	</td>
         </tr>
-
+      
 
           		<!-- Gender Identity -->
           	<!--	<tr>
@@ -234,20 +242,18 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
           <TR>
     <td><% response.write gITEXT("i_87")%><FONT SIZE='4' COLOR='Red'>*</FONT> </td>
     <td>
-         <table cellpadding="0" cellspacing="0" border="0">
-            <tr>
-                <td>
+     
+         
                     <select name="cand_gnd_i" onchange="toggleOther('otherGenderTextbox','cand_gnd_i');">
                         <OPTION value="1" <% If JAPY("cand_gnd_i") = "1" then%> SELECTED<% End If%>><% response.write gITEXT("i_88")%></OPTION>
                         <OPTION value="2" <% If JAPY("cand_gnd_i") = "2" then%> SELECTED<% End If%>><% response.write gITEXT("i_89")%></OPTION>
                         <OPTION value="0" <% If JAPY("cand_gnd_i") = "0" then%> SELECTED<% End If%>><% response.write gITEXT("i_76")%></OPTION>
                     </select>
-                </td>
-                <td id="otherGenderTextbox" style="display:none; padding-left: 5px;">
-                    <input type="text" name="cand_other_gender" value="">
-                </td>
-            </tr>
-        </table>
+               
+                <span id="otherGenderTextbox" style="display:none;">
+                    <input type="text"  placeholder="specify other" name="cand_other_gender" value="">
+                </span>
+         
     </td>
                <!-- The "Other" textbox, initially hidden, placed in the same row -->
      
