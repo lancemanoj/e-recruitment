@@ -49,10 +49,11 @@ pv_heavybottom = "1"
 ' END CHECK LOGGED IN AND DIM DB's
 dim JAPYsql, JAPY
 dim JAPINFO2sql, JAPINFO2
+dim JAPINFO3sql,JAPINFO3
 DIM UPDDsql, UPDD, goeditsql, goedit, logeditsql, logedit
 Dim Dcount, faqid
 '<<--Added by Interface on 05/02/2007
-dim obj_db_CmdI, obj_db_CmdII, obj_logs_CmdI,obj_db_select_CmdI
+dim obj_db_CmdI, obj_db_CmdII, obj_logs_CmdI,obj_db_select_CmdI,obj_db_select_Cmd3
 '-->>
 'Added on 11/24/2008 DD
 dim currentYear, pv_candidD
@@ -60,7 +61,7 @@ dim currentYear, pv_candidD
 ' BEGIN INCLUDE TEXT
 dim gITEXTsql, gITEXT
 '<<--Modified by Interface on 05/02/2007
-gITEXTsql = "SELECT i_1, i_4, i_23, i_text1, i_27,i_5, i_16, i_17, i_18,i_32,i_15, i_9,i_11, i_10,i_19, i_20, i_29,i_30, i_22, i_21,i_13,i_76, i_87,i_88,i_89 FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'Div' "
+gITEXTsql = "SELECT i_1, i_4, i_23, i_text1, i_27,i_5, i_16, i_17, i_18,i_32,i_15, i_9,i_11, i_10,i_19, i_20, i_29,i_30, i_22, i_21,i_13,i_76, i_87,i_88,i_89,i_91,i_92,i_93,i_94 FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'Div' "
 obj_int_select_Cmd.CommandText = gITEXTsql
 Set gITEXT = obj_int_select_Cmd.Execute(,Array(session("template_org_code"),session("lng")))
 '-->>
@@ -118,6 +119,19 @@ obj_db_select_CmdI.ActiveConnection = rsys_db_select
 JAPINFO2sql = "SELECT editD FROM tx_rsys_candedit WHERE cand_id_c = ? "
 obj_db_select_CmdI.CommandText = JAPINFO2sql
 Set JAPINFO2 = obj_db_select_CmdI.Execute(,Array(pv_candidD)) 
+
+
+set obj_db_select_Cmd3 = server.CreateObject("adodb.command")
+  obj_db_select_Cmd3.ActiveConnection = rsys_db_select
+JAPINFO3sql = "SELECT canddiv_pronoun_id FROM tx_rsys_candmisc WHERE cand_id_c = ? "
+obj_db_select_Cmd3.CommandText = JAPINFO3sql
+
+'response.write JAPINFO3sql
+	Set JAPINFO3 = obj_db_select_Cmd3.Execute(,Array(pv_candidD))
+
+
+
+
 '-->>
 %>
 
@@ -188,17 +202,21 @@ Set JAPINFO2 = obj_db_select_CmdI.Execute(,Array(pv_candidD))
           		</tr>
     	<!-- Personal Pronouns -->
           		<tr>
-            	<td valign='top'>Personal pronouns (optional):</td>
-            	<td valign='top'>
-                <select name="cand_div_pronouns">
-                    <option value="">Select</option>
-                    <option value="He/him/his" <% If JAPY("cand_div_pronouns") = "He/him/his" Then Response.Write("selected") %>>He/him/his</option>
-                    <option value="She/her/hers" <% If JAPY("cand_div_pronouns") = "She/her/hers" Then Response.Write("selected") %>>She/her/hers</option>
-                    <option value="They/them/theirs" <% If JAPY("cand_div_pronouns") = "They/them/theirs" Then Response.Write("selected") %>>They/them/theirs</option>
-                    <option value="Other" <% If JAPY("cand_div_pronouns") = "Other" Then Response.Write("selected") %>>Other</option>
-                </select>
-            	</td>
-            </tr>
+           	<td><% response.write gITEXT("i_91")%><FONT SIZE='4' COLOR='Red'>*</FONT> </td>
+
+           	<td valign='top'>
+            <select name="cand_div_pronouns" >
+             
+                <option value ="select"> select</option>
+           
+                   <option value="1" <% If JAPINFO3("canddiv_pronoun_id") = "1" Then Response.Write("selected") %>><% response.write gITEXT("i_92")%></OPTION>
+                   <option value="2" <% If JAPINFO3("canddiv_pronoun_id") = "2" Then Response.Write("selected") %>><% response.write gITEXT("i_93")%></OPTION>
+                   <option value="3" <% If JAPINFO3("canddiv_pronoun_id") = "3" Then Response.Write("selected") %>><% response.write gITEXT("i_94")%></OPTION>
+                     <option value="0" <% If JAPINFO3("canddiv_pronoun_id") = "0" Then Response.Write("selected") %>><% response.write gITEXT("i_76")%></OPTION>
+            </select>
+           	</td>
+        </tr>
+
 
           		<!-- Gender Identity -->
           	<!--	<tr>
@@ -221,8 +239,8 @@ Set JAPINFO2 = obj_db_select_CmdI.Execute(,Array(pv_candidD))
                 <td>
                     <select name="cand_gnd_i" onchange="toggleOther('otherGenderTextbox','cand_gnd_i');">
                         <OPTION value="1" <% If JAPY("cand_gnd_i") = "1" then%> SELECTED<% End If%>><% response.write gITEXT("i_88")%></OPTION>
-                        <OPTION value="0" <% If JAPY("cand_gnd_i") = "0" then%> SELECTED<% End If%>><% response.write gITEXT("i_89")%></OPTION>
-                        <OPTION value="2" <% If JAPY("cand_gnd_i") = "2" then%> SELECTED<% End If%>><% response.write gITEXT("i_76")%></OPTION>
+                        <OPTION value="2" <% If JAPY("cand_gnd_i") = "2" then%> SELECTED<% End If%>><% response.write gITEXT("i_89")%></OPTION>
+                        <OPTION value="0" <% If JAPY("cand_gnd_i") = "0" then%> SELECTED<% End If%>><% response.write gITEXT("i_76")%></OPTION>
                     </select>
                 </td>
                 <td id="otherGenderTextbox" style="display:none; padding-left: 5px;">
