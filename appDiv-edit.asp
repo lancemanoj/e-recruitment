@@ -60,7 +60,7 @@ dim currentYear, pv_candidD
 ' BEGIN INCLUDE TEXT
 dim gITEXTsql, gITEXT
 '<<--Modified by Interface on 05/02/2007
-gITEXTsql = "SELECT i_1, i_4, i_23, i_text1, i_27,i_5, i_16, i_17, i_18,i_32,i_15, i_9,i_11, i_10,i_19, i_20, i_29, i_22, i_21,i_13 FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'Div' "
+gITEXTsql = "SELECT i_1, i_4, i_23, i_text1, i_27,i_5, i_16, i_17, i_18,i_32,i_15, i_9,i_11, i_10,i_19, i_20, i_29,i_30, i_22, i_21,i_13,i_76, i_87,i_88,i_89 FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'Div' "
 obj_int_select_Cmd.CommandText = gITEXTsql
 Set gITEXT = obj_int_select_Cmd.Execute(,Array(session("template_org_code"),session("lng")))
 '-->>
@@ -107,7 +107,7 @@ End If
 set obj_db_select_Cmd = server.CreateObject("adodb.command")
 obj_db_select_Cmd.ActiveConnection = rsys_db_select
 
-JAPYsql = "SELECT upd_d, cand_lnam_t, cand_fnam_t, cand_comp_os_i, cand_comp_os_other_t, cand_wp_i, cand_wp_other_t, cand_sps_i, cand_sps_other_t, cand_db_i, cand_db_other_t, cand_pres_i, cand_pres_other_t, cand_web_i, cand_web_other_t, cand_prgming_i, cand_prgming_other_t, cand_pc_other_t, cand_pc_skills_t,cand_div_pronouns, cand_div_gender_doc, cand_div_gender_identity, cand_div_race_ethnicity, cand_div_disability, cand_div_accommodation, cand_div_key_population FROM td_rsys_cand 	WHERE cand_id_c = ?"
+JAPYsql = "SELECT cand_gnd_i, upd_d, cand_lnam_t, cand_fnam_t, cand_comp_os_i, cand_comp_os_other_t, cand_wp_i, cand_wp_other_t, cand_sps_i, cand_sps_other_t, cand_db_i, cand_db_other_t, cand_pres_i, cand_pres_other_t, cand_web_i, cand_web_other_t, cand_prgming_i, cand_prgming_other_t, cand_pc_other_t, cand_pc_skills_t,cand_div_pronouns, cand_div_gender_doc, cand_div_gender_identity, cand_div_race_ethnicity, cand_div_disability, cand_div_accommodation, cand_div_key_population FROM td_rsys_cand 	WHERE cand_id_c = ?"
 obj_db_select_Cmd.CommandText = JAPYsql
 Set JAPY = obj_db_select_Cmd.Execute(,Array(pv_candidD)) 
 
@@ -134,8 +134,23 @@ Set JAPINFO2 = obj_db_select_CmdI.Execute(,Array(pv_candidD))
 '</SCRIPT>
 
 '</head>
-%>
 
+  
+
+%>
+<script type="text/javascript">
+      function toggleOther(textboxId,field) {
+          var genderDropdown = document.getElementsByName(field)[0];
+          var selectedValue = genderDropdown.value;
+          var otherTextbox = document.getElementById(textboxId);
+          
+          if (selectedValue === "2") { // Assuming "2" corresponds to "Other"
+              otherTextbox.style.display = "block";
+          } else {
+              otherTextbox.style.display = "none";
+          }
+      }
+</script>
    
 <form class="appForms" action="appD-edit.asp" method="POST" ONSUBMIT="return DataValidation();">
   <TABLE cellpadding="0" border="0" width="100%">
@@ -186,7 +201,7 @@ Set JAPINFO2 = obj_db_select_CmdI.Execute(,Array(pv_candidD))
             </tr>
 
           		<!-- Gender Identity -->
-          		<tr>
+          	<!--	<tr>
             	<td valign='top'>Gender identity (optional):</td>
             	<td valign='top'>
                 <select name="cand_div_gender_identity">
@@ -197,7 +212,33 @@ Set JAPINFO2 = obj_db_select_CmdI.Execute(,Array(pv_candidD))
                     <option value="Other" <% If JAPY("cand_div_gender_identity") = "Other" Then Response.Write("selected") %>>Other</option>
                 </select>
             	</td>
+            </tr>-->
+          <TR>
+    <td><% response.write gITEXT("i_87")%><FONT SIZE='4' COLOR='Red'>*</FONT> </td>
+    <td>
+         <table cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <td>
+                    <select name="cand_gnd_i" onchange="toggleOther('otherGenderTextbox','cand_gnd_i');">
+                        <OPTION value="1" <% If JAPY("cand_gnd_i") = "1" then%> SELECTED<% End If%>><% response.write gITEXT("i_88")%></OPTION>
+                        <OPTION value="0" <% If JAPY("cand_gnd_i") = "0" then%> SELECTED<% End If%>><% response.write gITEXT("i_89")%></OPTION>
+                        <OPTION value="2" <% If JAPY("cand_gnd_i") = "2" then%> SELECTED<% End If%>><% response.write gITEXT("i_76")%></OPTION>
+                    </select>
+                </td>
+                <td id="otherGenderTextbox" style="display:none; padding-left: 5px;">
+                    <input type="text" name="cand_other_gender" value="">
+                </td>
             </tr>
+        </table>
+    </td>
+               <!-- The "Other" textbox, initially hidden, placed in the same row -->
+     
+</TR>
+
+      
+             
+
+
 
           		<!-- Race/Ethnicity -->
           		<tr>
