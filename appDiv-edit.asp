@@ -107,7 +107,7 @@ End If
 set obj_db_select_Cmd = server.CreateObject("adodb.command")
 obj_db_select_Cmd.ActiveConnection = rsys_db_select
 
-JAPYsql = "SELECT upd_d, cand_lnam_t, cand_fnam_t, cand_comp_os_i, cand_comp_os_other_t, cand_wp_i, cand_wp_other_t, cand_sps_i, cand_sps_other_t, cand_db_i, cand_db_other_t, cand_pres_i, cand_pres_other_t, cand_web_i, cand_web_other_t, cand_prgming_i, cand_prgming_other_t, cand_pc_other_t, cand_pc_skills_t FROM td_rsys_cand 	WHERE cand_id_c = ?"
+JAPYsql = "SELECT upd_d, cand_lnam_t, cand_fnam_t, cand_comp_os_i, cand_comp_os_other_t, cand_wp_i, cand_wp_other_t, cand_sps_i, cand_sps_other_t, cand_db_i, cand_db_other_t, cand_pres_i, cand_pres_other_t, cand_web_i, cand_web_other_t, cand_prgming_i, cand_prgming_other_t, cand_pc_other_t, cand_pc_skills_t,cand_div_pronouns, cand_div_gender_doc, cand_div_gender_identity, cand_div_race_ethnicity, cand_div_disability, cand_div_accommodation, cand_div_key_population FROM td_rsys_cand 	WHERE cand_id_c = ?"
 obj_db_select_Cmd.CommandText = JAPYsql
 Set JAPY = obj_db_select_Cmd.Execute(,Array(pv_candidD)) 
 
@@ -171,6 +171,76 @@ Set JAPINFO2 = obj_db_select_CmdI.Execute(,Array(pv_candidD))
           		<TR>
             			<td valign='top' valign='top' colspan='3' class="textbold"><%=gITEXT("i_22")%></td>
           		</tr>
+    	<!-- Personal Pronouns -->
+          		<tr>
+            	<td valign='top'>Personal pronouns (optional):</td>
+            	<td valign='top'>
+                <select name="cand_div_pronouns">
+                    <option value="">Select</option>
+                    <option value="He/him/his" <% If JAPY("cand_div_pronouns") = "He/him/his" Then Response.Write("selected") %>>He/him/his</option>
+                    <option value="She/her/hers" <% If JAPY("cand_div_pronouns") = "She/her/hers" Then Response.Write("selected") %>>She/her/hers</option>
+                    <option value="They/them/theirs" <% If JAPY("cand_div_pronouns") = "They/them/theirs" Then Response.Write("selected") %>>They/them/theirs</option>
+                    <option value="Other" <% If JAPY("cand_div_pronouns") = "Other" Then Response.Write("selected") %>>Other</option>
+                </select>
+            	</td>
+            </tr>
+
+          		<!-- Gender Identity -->
+          		<tr>
+            	<td valign='top'>Gender identity (optional):</td>
+            	<td valign='top'>
+                <select name="cand_div_gender_identity">
+                    <option value="">Select</option>
+                    <option value="Male" <% If JAPY("cand_div_gender_identity") = "Male" Then Response.Write("selected") %>>Male</option>
+                    <option value="Female" <% If JAPY("cand_div_gender_identity") = "Female" Then Response.Write("selected") %>>Female</option>
+                    <option value="Non-binary" <% If JAPY("cand_div_gender_identity") = "Non-binary" Then Response.Write("selected") %>>Non-binary</option>
+                    <option value="Other" <% If JAPY("cand_div_gender_identity") = "Other" Then Response.Write("selected") %>>Other</option>
+                </select>
+            	</td>
+            </tr>
+
+          		<!-- Race/Ethnicity -->
+          		<tr>
+            	<td valign='top'>Race/Ethnicity (optional):</td>
+            	<td valign='top'>
+                <select name="cand_div_race_ethnicity">
+                    <option value="">Select</option>
+                    <option value="Asian" <% If JAPY("cand_div_race_ethnicity") = "Asian" Then Response.Write("selected") %>>Asian</option>
+                    <option value="Black or African American" <% If JAPY("cand_div_race_ethnicity") = "Black or African American" Then Response.Write("selected") %>>Black or African American</option>
+                    <option value="Hispanic or Latino" <% If JAPY("cand_div_race_ethnicity") = "Hispanic or Latino" Then Response.Write("selected") %>>Hispanic or Latino</option>
+                    <option value="White" <% If JAPY("cand_div_race_ethnicity") = "White" Then Response.Write("selected") %>>White</option>
+                    <option value="Other" <% If JAPY("cand_div_race_ethnicity") = "Other" Then Response.Write("selected") %>>Other</option>
+                </select>
+            	</td>
+            </tr>
+
+          		<!-- Disability Inclusion -->
+          		<tr>
+            	<td valign='top'>Disability Inclusion (optional):</td>
+            	<td valign='top'>
+                <select name="cand_div_disability">
+                    <option value="">Select</option>
+                    <option value="Yes" <% If JAPY("cand_div_disability") = "Yes" Then Response.Write("selected") %>>Yes</option>
+                    <option value="No" <% If JAPY("cand_div_disability") = "No" Then Response.Write("selected") %>>No</option>
+                    <option value="Prefer not to answer" <% If JAPY("cand_div_disability") = "Prefer not to answer" Then Response.Write("selected") %>>Prefer not to answer</option>
+                </select>
+            	</td>
+            </tr>
+
+          		<!-- Key Populations -->
+          		<tr>
+            	<td valign='top'>Key Populations (optional):</td>
+            	<td valign='top'>
+                <select name="cand_div_key_population">
+                    <option value="">Select</option>
+                    <option value="LGBTQ+" <% If JAPY("cand_div_key_population") = "LGBTQ+" Then Response.Write("selected") %>>LGBTQ+</option>
+                    <option value="Veteran" <% If JAPY("cand_div_key_population") = "Veteran" Then Response.Write("selected") %>>Veteran</option>
+                    <option value="Low-income" <% If JAPY("cand_div_key_population") = "Low-income" Then Response.Write("selected") %>>Low-income</option>
+                    <option value="Other" <% If JAPY("cand_div_key_population") = "Other" Then Response.Write("selected") %>>Other</option>
+                </select>
+            	</td>
+            </tr>
+
           		<TR>
             			<td valign='top'><textarea  wrap="soft" ROWS="6" NAME="cand_pc_skills_t" COLS="50"><%=Server.HTMLEncode(JAPY("cand_pc_skills_t") & "")%></TEXTAREA></td>
           		</TR>
