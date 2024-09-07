@@ -158,7 +158,7 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
           var selectedValue = genderDropdown.value;
           var otherTextbox = document.getElementById(textboxId);
           
-          if (selectedValue === "0") { // Assuming "2" corresponds to "Other"
+          if (selectedValue === "0" || selectedValue === "-1") { // Assuming "2" corresponds to "Other"
               otherTextbox.style.display = "block";
           } else {
               otherTextbox.style.display = "none";
@@ -226,13 +226,13 @@ Function GenerateDropdown(jsonText, dropdownName, selectedValue)
     optionsArray = Split(optionsText, ",")
 
     ' Form generation
-    %>  
+%>  
     <tr>
         <td valign='top'>
             <label for="<%= dropdownName %>"><%= jsonKey %></label>
         </td>
         <td valign='top'>
-            <select name="<%= dropdownName %>" id="<%= dropdownName %>">
+            <select name="<%= dropdownName %>" id="<%= dropdownName %>" onchange="toggleOther('otherGenderRow', '<%= dropdownName %>')">
                 <% 
                 ' Populate dropdown options
                 For i = 0 To UBound(optionsArray)
@@ -252,6 +252,10 @@ Function GenerateDropdown(jsonText, dropdownName, selectedValue)
                 Next
                 %>
             </select>
+            <span id="otherGenderRow" style="display:none;">
+    <input type="text"  placeholder="specify other" name='<%= dropdownName %>' value="">
+</span>
+
         </td>
     </tr>
     <% 
@@ -330,9 +334,7 @@ End Function
                         <OPTION value="0" <% If JAPY("cand_gnd_i") = "0" then%> SELECTED<% End If%>><% response.write gITEXT("i_76")%></OPTION>
                     </select>
                
-                <span id="otherGenderTextbox" style="display:none;">
-                    <input type="text"  placeholder="specify other" name="cand_other_gender" value="">
-                </span>
+                
          
     </td>
                <!-- The "Other" textbox, initially hidden, placed in the same row -->
@@ -342,7 +344,6 @@ jsonText = gITEXT("i_text7") ' Fetch the JSON string from your function
 ' Call the function to generate the dropdown
 GenerateDropdown jsonText, "genderDropdown", Request.Form("genderDropdown")
 %>
-
 
 
           		
@@ -361,7 +362,7 @@ GenerateDropdown jsonText, "genderDropdown", Request.Form("genderDropdown")
 
         <!-- "Specify Other" textbox, initially hidden -->
         <span id="otherrace_ethnicityTextbox" style="display:none;">
-            <input type="text" placeholder="Specify other race/ethnicity" name="cand_div_race_ethnicity_other" value=">">
+            <input type="text" placeholder="Specify other race/ethnicity" name="cand_div_race_ethnicity_other" value="">
         </span>
     </td>
 </tr>
