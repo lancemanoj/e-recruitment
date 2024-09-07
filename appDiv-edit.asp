@@ -212,12 +212,16 @@ Function GenerateDropdown(jsonText, dropdownName, selectedValue)
     jsonKey = Replace(jsonKey, """", "")
 
     ' Extract the options for the dropdown
-    optionsStart = InStr(jsonText, "{""" & jsonKey & """") + Len("{""" & jsonKey & """") + 1
+    optionsStart = InStr(jsonText, """gender"":{") + Len("""gender"":{")
     optionsEnd = InStrRev(jsonText, "}") - 1
     optionsText = Mid(jsonText, optionsStart, optionsEnd - optionsStart + 1)
 
-    ' Convert optionsText to an array of key-value pairs
+    ' Remove extra characters like curly braces
+    optionsText = Replace(optionsText, "{", "")
+    optionsText = Replace(optionsText, "}", "")
     optionsText = Replace(optionsText, """", "") ' Remove quotes
+    
+    ' Convert optionsText to an array of key-value pairs
     Dim optionsArray
     optionsArray = Split(optionsText, ",")
 
