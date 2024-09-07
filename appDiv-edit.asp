@@ -61,7 +61,7 @@ dim currentYear, pv_candidD
 ' BEGIN INCLUDE TEXT
 dim gITEXTsql, gITEXT
 '<<--Modified by Interface on 05/02/2007
-gITEXTsql = "SELECT i_1, i_4, i_23, i_text1, i_27,i_5, i_16, i_17, i_18,i_32,i_15, i_9,i_11, i_10,i_19, i_20, i_29,i_30, i_22, i_21,i_13,i_76, i_87,i_88,i_89,i_91,i_92,i_93,i_94,i_95,i_96,i_97,i_98,i_99 FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'Div' "
+gITEXTsql = "SELECT i_text3,i_text4,i_text5, i_1, i_4, i_23, i_text1, i_27,i_5, i_16, i_17, i_18,i_32,i_15, i_9,i_11, i_10,i_19, i_20, i_29,i_30, i_22, i_21,i_13,i_76,i_83,i_84, i_87,i_88,i_89,i_91,i_92,i_93,i_94,i_95,i_96,i_97,i_98,i_99 FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'Div' "
 obj_int_select_Cmd.CommandText = gITEXTsql
 Set gITEXT = obj_int_select_Cmd.Execute(,Array(session("template_org_code"),session("lng")))
 '-->>
@@ -123,7 +123,7 @@ Set JAPINFO2 = obj_db_select_CmdI.Execute(,Array(pv_candidD))
 
 set obj_db_select_Cmd3 = server.CreateObject("adodb.command")
   obj_db_select_Cmd3.ActiveConnection = rsys_db_select
-JAPINFO3sql = "SELECT canddiv_pronoun_id,cand_div_race_ethnicity,cand_div_disability, cand_div_key_population FROM tx_rsys_candmisc WHERE cand_id_c = ? "
+JAPINFO3sql = "SELECT canddiv_pronoun_id,cand_div_race_ethnicity,cand_div_disability,cand_div_disability_accommodation, cand_div_key_population FROM tx_rsys_candmisc WHERE cand_id_c = ? "
 obj_db_select_Cmd3.CommandText = JAPINFO3sql
 
 'response.write JAPINFO3sql
@@ -164,7 +164,22 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
               otherTextbox.style.display = "none";
           }
       }
+
+    
+        function toggleDetails() {
+        var detailsRow = document.getElementById('detailsRow');
+        var button = event.target;
+
+        if (detailsRow.style.display === 'none') {
+            detailsRow.style.display = 'table-row';
+        button.textContent = 'Hide Details';
+        } else {
+            detailsRow.style.display = 'none';
+        button.textContent = 'Show Details';
+        }
+    }
 </script>
+
    
 <form class="appForms" action="appD-edit.asp" method="POST" ONSUBMIT="return DataValidation();">
   <TABLE cellpadding="0" border="0" width="100%">
@@ -202,7 +217,7 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
           		</tr>
     	<!-- Personal Pronouns -->
           		<tr>
-           	<td><% response.write gITEXT("i_91")%><FONT SIZE='4' COLOR='Red'>*</FONT> </td>
+           	<td><% response.write gITEXT("i_91")%> </td>
 
            	<td valign='top'>
             <select name="canddiv_pronoun_id"  onchange="toggleOther('otherpronounTextbox','canddiv_pronoun_id');" >
@@ -273,39 +288,95 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
     
         <input type="text" placeholder="specify other" name="race_ethnicity"  value="">
     
-</span>
+             </span>
 
            	</td>
         </tr>
       
           		<!-- Disability Inclusion -->
-          		<tr>
-            	<td valign='top'>Disability Inclusion (optional):</td>
-            	<td valign='top'>
-                <select name="cand_div_disability">
-                    <option value="">Select</option>
-                    <option value="Yes" <% If JAPY("cand_div_disability") = "Yes" Then Response.Write("selected") %>>Yes</option>
-                    <option value="No" <% If JAPY("cand_div_disability") = "No" Then Response.Write("selected") %>>No</option>
-                    <option value="Prefer not to answer" <% If JAPY("cand_div_disability") = "Prefer not to answer" Then Response.Write("selected") %>>Prefer not to answer</option>
-                </select>
-            	</td>
-            </tr>
+          	    <tr>
+       	<td><% response.write gITEXT("i_text3")%> </td>
 
+       	<td valign='top'>
+     <select name="cand_div_disability" onchange="toggleOther('otherdisabilityTextbox','cand_div_disability')" >
+      
+         <option value ="select"> select</option>
+    
+            <option value="0" <% If JAPINFO3("cand_div_disability") = "0" Then Response.Write("selected") %>><% response.write gITEXT("i_text4")%></OPTION>
+            <option value="2" <% If JAPINFO3("cand_div_disability") = "2" Then Response.Write("selected") %>><% response.write gITEXT("i_text5")%></OPTION>
+           
+     </select>
+
+           
+
+       	</td>
+ </tr>
+
+
+             		<!-- Disability acoomodation -->
+         	    <tr id="otherdisabilityTextbox" style="display:none" >
+      	<td><% response.write gITEXT("i_83")%> </td>
+
+      	<td valign='top'>
+    <select name="cand_div_disability_accommodation"  onchange="toggleOther('otherdisabilityaccomTextbox','cand_div_disability_accommodation')"; >
+     
+        <option value ="select"> select</option>
+   
+           <option value="2" <% If JAPINFO3("cand_div_disability_accommodation") = "2" Then Response.Write("selected") %>><% response.write gITEXT("i_text5")%></OPTION>
+           <option value="0" <% If JAPINFO3("cand_div_disability_accommodation") = "0" Then Response.Write("selected") %>><% response.write gITEXT("i_text4")%></OPTION>
+          
+    </select>
+
+          
+
+      	</td>
+</tr>
+
+             	    <tr id="otherdisabilityaccomTextbox" style="display:none">
+      	<td><% response.write gITEXT("i_84")%> </td>
+
+      	<td valign='top'>
+             
+
+             <input type="text" placeholder="specify reasonable accomation" name="cand_div_disability_accom"  value="">
+
+      	</td>
+</tr>
+
+
+
+
+
+    
+    <!-- Text Area Row -->
+    <tr>
+        <td>
+            <label for="keyPopulationsExplanation">You may want to explain whether and how you identify as part of key populations. 
+</label>
+            <textarea id="keyPopulationsExplanation" name="keyPopulationsExplanation" rows="4" cols="50"></textarea>
+        </td>
+    </tr>
+    
           		<!-- Key Populations -->
-          		<tr>
-            	<td valign='top'>Key Populations (optional):</td>
-            	<td valign='top'>
-                <select name="cand_div_key_population">
-                    <option value="">Select</option>
-                    <option value="LGBTQ+" <% If JAPY("cand_div_key_population") = "LGBTQ+" Then Response.Write("selected") %>>LGBTQ+</option>
-                    <option value="Veteran" <% If JAPY("cand_div_key_population") = "Veteran" Then Response.Write("selected") %>>Veteran</option>
-                    <option value="Low-income" <% If JAPY("cand_div_key_population") = "Low-income" Then Response.Write("selected") %>>Low-income</option>
-                    <option value="Other" <% If JAPY("cand_div_key_population") = "Other" Then Response.Write("selected") %>>Other</option>
-                </select>
-            	</td>
-            </tr>
+          	<tr>
+        <td>
+            <button type="button" onclick="toggleDetails()">Show Details</button>
+        </td>
+    </tr>
+    <!-- Paragraph Row (Hidden by Default) -->
+<tr id="detailsRow" style="display:none;">
+    <td>
+        <p>
+            The engagement of key populations is critical to a successful HIV response. Leadership by and greater involvement of communities living with and affected by HIV is essential to ending AIDS, therefore, applications from candidates belonging to these communities are especially welcome.
+            <br><br>
+            In light of these goals, we ask if you identify as part of key population(s).
+            Key populations, or key populations at higher risk, are groups of people who are more likely to be exposed to HIV or to transmit it and whose engagement is critical to a successful HIV response. In all countries, key populations include people living with HIV. In most settings, men who have sex with men, trans(gender) people, people who inject drugs, and sex workers and their clients are at higher risk of exposure to HIV than other groups. These populations often suffer from punitive laws or stigmatizing policies, and they are among the most likely to be exposed to HIV.
+        </p>
+    </td>
+</tr>
 
-          		<TR>
+
+    	<TR>
             			<td valign='top'><textarea  wrap="soft" ROWS="6" NAME="cand_pc_skills_t" COLS="50"><%=Server.HTMLEncode(JAPY("cand_pc_skills_t") & "")%></TEXTAREA></td>
           		</TR>
           		<TR>
@@ -317,6 +388,7 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
           		<TR>
             			<td valign='top' valign='top' colspan='3' class="textbold">&nbsp;</td>
           		</tr>
+
           <%
           Dcount = int(japinfo2("EditD") + 1)
           'JAPINFO.movenext
