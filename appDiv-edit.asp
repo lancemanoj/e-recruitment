@@ -201,21 +201,34 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
 dim jsonText
 jsonText = gITEXT("i_text7")
 
-' Extract the key for the label (manual parsing)
+' Extract the key for the label
 dim keyStart, keyEnd, labelKey
-keyStart = InStr(jsonText, """gender""") + Len("""gender""") + 2
-keyEnd = InStr(keyStart, jsonText, "]") - 1
-labelKey = Mid(jsonText, keyStart, keyEnd - keyStart + 1)
-labelKey = Replace(labelKey, """", "")
+keyStart = InStr(jsonText, """gender""") + Len("""gender""") + 3 ' Position after the key
+keyEnd = InStr(keyStart, jsonText, ":") - 1 ' Position before the colon
+if keyStart > 0 and keyEnd > keyStart then
+    labelKey = Mid(jsonText, keyStart, keyEnd - keyStart + 1)
+    labelKey = Replace(labelKey, """", "") ' Remove quotes
+else
+    labelKey = "gender" ' Default value if parsing fails
+end if
 
-' Extract the options for the dropdown (manual parsing)
+' Extract the options for the dropdown
 dim optionsStart, optionsEnd, optionsText
 optionsStart = InStr(jsonText, "[") + 1
 optionsEnd = InStrRev(jsonText, "]") - 1
-optionsText = Mid(jsonText, optionsStart, optionsEnd - optionsStart + 1)
-optionsText = Replace(optionsText, """", "")
+if optionsStart > 0 and optionsEnd > optionsStart then
+    optionsText = Mid(jsonText, optionsStart, optionsEnd - optionsStart + 1)
+    optionsText = Replace(optionsText, """", "")
+else
+    optionsText = "" ' Default value if parsing fails
+end if
+
 dim genderOptions
-genderOptions = Split(optionsText, ",")
+if Len(optionsText) > 0 then
+    genderOptions = Split(optionsText, ",")
+else
+    genderOptions = Array() ' Empty array if no options are found
+end if
 
 ' Form generation
 %>
@@ -297,29 +310,26 @@ genderOptions = Split(optionsText, ",")
          
     </td>
                <!-- The "Other" textbox, initially hidden, placed in the same row -->
-     
-</TR>
-
-        <tr>
-            <td valign='top'>
-                <label for="genderDropdown"><%= labelKey %></label>
-            </td>
-            <td valign='top'>
-                <select name="cand_gender" id="genderDropdown">
-                    <% 
-                    ' Populate dropdown options
-                    dim i
-                    for i = 0 to UBound(genderOptions)
-                        response.write "<option value=""" & i & """"
-                        if Request.Form("cand_gender") = i then
-                            response.write " selected"
-                        end if
-                        response.write ">" & genderOptions(i) & "</option>"
-                    next
-                    %>
-                </select>
-            </td>
-        </tr>
+<tr>
+    <td valign='top'>
+        <label for="genderDropdown"><%= labelKey %></label>
+    </td>
+    <td valign='top'>
+        <select name="cand_gender" id="genderDropdown">
+            <% 
+            ' Populate dropdown options
+            dim i
+            for i = 0 to UBound(genderOptions)
+                response.write "<option value=""" & i & """"
+                if Request.Form("cand_gender") = i then
+                    response.write " selected"
+                end if
+                response.write ">" & genderOptions(i) & "</option>"
+            next
+            %>
+        </select>
+    </td>
+</tr>
 
 
 
