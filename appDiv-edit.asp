@@ -202,31 +202,31 @@ Function GenerateDropdown(jsonText, dropdownName, selectedValue)
     Dim keyStart, keyEnd, optionsStart, optionsEnd, optionsText
     Dim i, optionParts
     Dim optionValue, optionText
-
+    
     ' Extract the key for the label
     keyStart = InStr(jsonText, "{") + 1
-    keyEnd = InStr(keyStart, jsonText, ":") - 2
+    keyEnd = InStr(keyStart, jsonText, ":{") - 1
     jsonKey = Mid(jsonText, keyStart, keyEnd - keyStart + 1)
     
     ' Remove any extra quotation marks
     jsonKey = Replace(jsonKey, """", "")
 
     ' Extract the options for the dropdown
-    optionsStart = InStr(jsonText, """gender"":{") + Len("""gender"":{")
+    optionsStart = InStr(jsonText, ":{") + 2
     optionsEnd = InStrRev(jsonText, "}") - 1
     optionsText = Mid(jsonText, optionsStart, optionsEnd - optionsStart + 1)
 
-    ' Remove extra characters like curly braces
+    ' Remove extra characters like curly braces and quotes
+    optionsText = Replace(optionsText, """", "")
     optionsText = Replace(optionsText, "{", "")
     optionsText = Replace(optionsText, "}", "")
-    optionsText = Replace(optionsText, """", "") ' Remove quotes
     
     ' Convert optionsText to an array of key-value pairs
     Dim optionsArray
     optionsArray = Split(optionsText, ",")
 
     ' Form generation
-    %>
+    %>  
     <tr>
         <td valign='top'>
             <label for="<%= dropdownName %>"><%= jsonKey %></label>
@@ -257,8 +257,6 @@ Function GenerateDropdown(jsonText, dropdownName, selectedValue)
     <% 
 End Function
 %>
-
-
 
 
     <TABLE cellpadding="0" border="0" width="100%">
@@ -338,14 +336,12 @@ End Function
          
     </td>
                <!-- The "Other" textbox, initially hidden, placed in the same row -->
-<!--gendedr -->
-   <%
+<%
 Dim jsonText
-       jsonText = gITEXT("i_text7")
+jsonText = gITEXT("i_text7") ' Fetch the JSON string from your function
 ' Call the function to generate the dropdown
 GenerateDropdown jsonText, "genderDropdown", Request.Form("genderDropdown")
 %>
-
 
 
 
