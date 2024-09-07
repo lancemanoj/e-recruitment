@@ -334,7 +334,9 @@ End Function
                         <OPTION value="0" <% If JAPY("cand_gnd_i") = "0" then%> SELECTED<% End If%>><% response.write gITEXT("i_76")%></OPTION>
                     </select>
                
-                
+                     <span id="otherGenderTextbox" style="display:none;">
+                    <input type="text"  placeholder="specify other" name="cand_other_gender" value="">
+                </span>
          
     </td>
                <!-- The "Other" textbox, initially hidden, placed in the same row -->
