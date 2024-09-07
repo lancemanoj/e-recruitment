@@ -197,51 +197,66 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
    
 <form class="appForms" action="appD-edit.asp" method="POST" ONSUBMIT="return DataValidation();">
 <%
+Function GenerateDropdown(jsonText, dropdownName, selectedValue)
+    Dim jsonKey, jsonOptions
+    Dim keyStart, keyEnd, optionsStart, optionsEnd, optionsText
+    Dim i, optionParts
+    Dim optionValue, optionText
 
-Function GenerateDropdownFromJSON(jsonText, dropdownName, dropdownId)
     ' Extract the key for the label
-    Dim keyStart, keyEnd, key
-    keyStart = InStr(jsonText, """") + 1
-    keyEnd = InStr(keyStart, jsonText, """") - 1
-    key = Mid(jsonText, keyStart, keyEnd - keyStart + 1)
+    keyStart = InStr(jsonText, "{") + 1
+    keyEnd = InStr(keyStart, jsonText, ":") - 2
+    jsonKey = Mid(jsonText, keyStart, keyEnd - keyStart + 1)
+    
+    ' Remove any extra quotation marks
+    jsonKey = Replace(jsonKey, """", "")
 
     ' Extract the options for the dropdown
-    Dim optionsStart, optionsEnd, optionsText
-    optionsStart = InStr(jsonText, "[") + 1
-    optionsEnd = InStrRev(jsonText, "]") - 1
+    optionsStart = InStr(jsonText, "{""" & jsonKey & """") + Len("{""" & jsonKey & """") + 1
+    optionsEnd = InStrRev(jsonText, "}") - 1
     optionsText = Mid(jsonText, optionsStart, optionsEnd - optionsStart + 1)
-    optionsText = Replace(optionsText, """", "")
-    Dim genderOptions
-    genderOptions = Split(optionsText, ",")
 
-    ' Generate the HTML for the dropdown and label
-    GenerateDropdownFromJSON = "<tr>" & _
-        "<td valign='top'>" & _
-        "<label for=""" & dropdownId & """>" & key & "</label>" & _
-        "</td>" & _
-        "<td valign='top'>" & _
-        "<select name=""" & dropdownName & """ id=""" & dropdownId & """>" & _
-        Join(GenerateOptions(genderOptions, Request.Form(dropdownName)), vbCrLf) & _
-        "</select>" & _
-        "</td>" & _
-        "</tr>"
-End Function
+    ' Convert optionsText to an array of key-value pairs
+    optionsText = Replace(optionsText, """", "") ' Remove quotes
+    Dim optionsArray
+    optionsArray = Split(optionsText, ",")
 
-' Helper function to generate options for the dropdown
-Function GenerateOptions(optionsArray, selectedValue)
-    Dim optionsList, i
-    ReDim optionsList(UBound(optionsArray))
-    For i = 0 To UBound(optionsArray)
-        optionsList(i) = "<option value=""" & i & """"
-        If selectedValue = i Then
-            optionsList(i) = optionsList(i) & " selected"
-        End If
-        optionsList(i) = optionsList(i) & ">" & optionsArray(i) & "</option>"
-    Next
-    GenerateOptions = optionsList
-End Function
-
+    ' Form generation
     %>
+    <tr>
+        <td valign='top'>
+            <label for="<%= dropdownName %>"><%= jsonKey %></label>
+        </td>
+        <td valign='top'>
+            <select name="<%= dropdownName %>" id="<%= dropdownName %>">
+                <% 
+                ' Populate dropdown options
+                For i = 0 To UBound(optionsArray)
+                    ' Extract key and value
+                    optionParts = Split(optionsArray(i), ":")
+                    If UBound(optionParts) = 1 Then
+                        optionValue = Trim(optionParts(0))
+                        optionText = Trim(optionParts(1))
+                        
+                        ' Write option to the dropdown
+                        response.write "<option value=""" & optionValue & """"
+                        If selectedValue = optionValue Then
+                            response.write " selected"
+                        End If
+                        response.write ">" & optionText & "</option>"
+                    End If
+                Next
+                %>
+            </select>
+        </td>
+    </tr>
+    <% 
+End Function
+%>
+
+
+
+
     <TABLE cellpadding="0" border="0" width="100%">
         <%' REMOVED Do while JAPINFO.eof = false%>
           		<tr>
@@ -320,12 +335,13 @@ End Function
     </td>
                <!-- The "Other" textbox, initially hidden, placed in the same row -->
 <!--gendedr -->
-              <%
-' Example usage
+   <%
 Dim jsonText
-jsonText = gITEXT("i_text7")
-Response.Write GenerateDropdownFromJSON(jsonText, "cand_gender", "genderDropdown")
+       jsonText = gITEXT("i_text7")
+' Call the function to generate the dropdown
+GenerateDropdown jsonText, "genderDropdown", Request.Form("genderDropdown")
 %>
+
 
 
 
