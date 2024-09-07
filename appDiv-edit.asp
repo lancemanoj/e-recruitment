@@ -61,7 +61,7 @@ dim currentYear, pv_candidD
 ' BEGIN INCLUDE TEXT
 dim gITEXTsql, gITEXT
 '<<--Modified by Interface on 05/02/2007
-gITEXTsql = "SELECT i_text3,i_text4,i_text5, i_1, i_4, i_23, i_text1, i_27,i_5, i_16, i_17, i_18,i_32,i_15, i_9,i_11, i_10,i_19, i_20, i_29,i_30, i_22, i_21,i_13,i_76,i_83,i_84, i_87,i_88,i_89,i_91,i_92,i_93,i_94,i_95,i_96,i_97,i_98,i_99 FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'Div' "
+gITEXTsql = "SELECT i_text3,i_text4,i_text5, i_1, i_4, i_23, i_text1, i_27,i_5, i_16, i_17, i_18,i_32,i_15, i_9,i_11, i_10,i_19, i_20, i_29,i_30, i_22, i_21,i_13,i_76,i_83,i_84, i_87,i_88,i_89,i_91,i_92,i_93,i_94,i_95,i_96,i_97,i_98,i_99,i_text7 FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'Div' "
 obj_int_select_Cmd.CommandText = gITEXTsql
 Set gITEXT = obj_int_select_Cmd.Execute(,Array(session("template_org_code"),session("lng")))
 '-->>
@@ -165,7 +165,21 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
           }
       }
 
-    
+    function checkOtherSelection() {
+        var dropdown = document.getElementById('race_ethnicityDropdown');
+        var otherTextbox = document.getElementById('otherrace_ethnicityTextbox');
+
+        // Check if "Other" (value = 0) is selected
+        var selectedOptions = Array.from(dropdown.selectedOptions);
+        var isOtherSelected = selectedOptions.some(option => option.value === '0');
+
+        if (isOtherSelected) {
+            otherTextbox.style.display = 'inline'; // Show the textbox when "Other" is selected
+        } else {
+            otherTextbox.style.display = 'none';   // Hide the textbox when "Other" is not selected
+        }
+    }
+
         function toggleDetails() {
         var detailsRow = document.getElementById('detailsRow');
         var button = event.target;
@@ -182,7 +196,31 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
 
    
 <form class="appForms" action="appD-edit.asp" method="POST" ONSUBMIT="return DataValidation();">
-  <TABLE cellpadding="0" border="0" width="100%">
+<%
+' Example JSON string directly from gITEXT
+dim jsonText
+jsonText = gITEXT("i_text7")
+
+' Extract the key for the label (manual parsing)
+dim keyStart, keyEnd, labelKey
+keyStart = InStr(jsonText, """gender""") + Len("""gender""") + 2
+keyEnd = InStr(keyStart, jsonText, "]") - 1
+labelKey = Mid(jsonText, keyStart, keyEnd - keyStart + 1)
+labelKey = Replace(labelKey, """", "")
+
+' Extract the options for the dropdown (manual parsing)
+dim optionsStart, optionsEnd, optionsText
+optionsStart = InStr(jsonText, "[") + 1
+optionsEnd = InStrRev(jsonText, "]") - 1
+optionsText = Mid(jsonText, optionsStart, optionsEnd - optionsStart + 1)
+optionsText = Replace(optionsText, """", "")
+dim genderOptions
+genderOptions = Split(optionsText, ",")
+
+' Form generation
+%>
+
+    <TABLE cellpadding="0" border="0" width="100%">
         <%' REMOVED Do while JAPINFO.eof = false%>
           		<tr>
             			<td valign='top' colspan="2"><%=gITEXT("i_4")%></td>
@@ -262,36 +300,49 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
      
 </TR>
 
-      
-             
-
-
-
-          		<!-- Race/Ethnicity -->
-           <tr>
-           	<td><% response.write gITEXT("i_95")%> </td>
-
-           	<td valign='top'>
-            <select name="cand_div_race_ethnicity"  onchange="toggleOther('otherrace_ethnicityTextbox','cand_div_race_ethnicity');" >
-             
-                <option value ="select"> select</option>
-           
-                   <option value="1" <% If JAPINFO3("cand_div_race_ethnicity") = "1" Then Response.Write("selected") %>><% response.write gITEXT("i_96")%></OPTION>
-                   <option value="2" <% If JAPINFO3("cand_div_race_ethnicity") = "2" Then Response.Write("selected") %>><% response.write gITEXT("i_97")%></OPTION>
-                   <option value="3" <% If JAPINFO3("cand_div_race_ethnicity") = "3" Then Response.Write("selected") %>><% response.write gITEXT("i_98")%></OPTION>
-                  <option value="4" <% If JAPINFO3("cand_div_race_ethnicity") = "4" Then Response.Write("selected") %>><% response.write gITEXT("i_99")%></OPTION>
-                     <option value="0" <% If JAPINFO3("cand_div_race_ethnicity") = "0" Then Response.Write("selected") %>><% response.write gITEXT("i_76")%></OPTION>
-            </select>
-
-                         <span id="otherrace_ethnicityTextbox" style="display:none;">
-   
-    
-        <input type="text" placeholder="specify other" name="race_ethnicity"  value="">
-    
-             </span>
-
-           	</td>
+        <tr>
+            <td valign='top'>
+                <label for="genderDropdown"><%= labelKey %></label>
+            </td>
+            <td valign='top'>
+                <select name="cand_gender" id="genderDropdown">
+                    <% 
+                    ' Populate dropdown options
+                    dim i
+                    for i = 0 to UBound(genderOptions)
+                        response.write "<option value=""" & i & """"
+                        if Request.Form("cand_gender") = i then
+                            response.write " selected"
+                        end if
+                        response.write ">" & genderOptions(i) & "</option>"
+                    next
+                    %>
+                </select>
+            </td>
         </tr>
+
+
+
+          		
+<!-- Race/Ethnicity -->
+<tr>
+    <td><% response.write gITEXT("i_95")%></td>
+
+    <td valign='top'>
+        <select name="cand_div_race_ethnicity[]" id="race_ethnicityDropdown" multiple onchange="checkOtherSelection();" size="5">
+            <option value="1" <% If InStr(JAPINFO3("cand_div_race_ethnicity"), "1") > 0 Then Response.Write("selected") %>><% response.write gITEXT("i_96")%></option>
+            <option value="2" <% If InStr(JAPINFO3("cand_div_race_ethnicity"), "2") > 0 Then Response.Write("selected") %>><% response.write gITEXT("i_97")%></option>
+            <option value="3" <% If InStr(JAPINFO3("cand_div_race_ethnicity"), "3") > 0 Then Response.Write("selected") %>><% response.write gITEXT("i_98")%></option>
+            <option value="4" <% If InStr(JAPINFO3("cand_div_race_ethnicity"), "4") > 0 Then Response.Write("selected") %>><% response.write gITEXT("i_99")%></option>
+            <option value="0" <% If InStr(JAPINFO3("cand_div_race_ethnicity"), "0") > 0 Then Response.Write("selected") %>><% response.write gITEXT("i_76")%> <!-- "Other" --></option>
+        </select>
+
+        <!-- "Specify Other" textbox, initially hidden -->
+        <span id="otherrace_ethnicityTextbox" style="display:none;">
+            <input type="text" placeholder="Specify other race/ethnicity" name="cand_div_race_ethnicity_other" value=">">
+        </span>
+    </td>
+</tr>
       
           		<!-- Disability Inclusion -->
           	    <tr>
