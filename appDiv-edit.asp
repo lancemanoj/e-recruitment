@@ -87,6 +87,62 @@ else
 	
 End If
 
+
+' Form Submission Logic
+Dim action
+action = Request.Form("action")
+
+
+If action = "Save" Then
+    ' Ensure race_ethnicity is treated as an array
+    Dim race_ethnicity_value
+    If IsArray(Request.Form("cand_div_race_ethnicity")) Then
+        race_ethnicity_value = Join(Request.Form("cand_div_race_ethnicity"), ",")
+    Else
+        race_ethnicity_value = Request.Form("cand_div_race_ethnicity")
+    End If
+
+    ' Construct the SQL query string with parameters
+    Dim updateSQL, queryString
+    updateSQL = "UPDATE dbo.tx_rsys_candmisc SET canddiv_pronoun_id = ?, cand_div_race_ethnicity = ?, cand_div_disability = ?, cand_div_disability_accommodation = ?, cand_div_key_population = ? WHERE cand_id_c = ?"
+    
+    ' Build the query string with the parameters replaced for printing
+    queryString = "UPDATE tx_rsys_candmisc SET " & _
+        "cand_div_pronoun_id = '" & Request.Form("canddiv_pronoun_id") & "', " & _
+        "cand_div_race_ethnicity = '" & race_ethnicity_value & "', " & _
+        "cand_div_disability = '" & Request.Form("cand_div_disability") & "', " & _
+        "cand_div_disability_accommodation = '" & Request.Form("cand_div_disability_accommodation") & "', " & _
+        "cand_div_key_population = '" & Request.Form("cand_div_key_population") & "' " & _
+        "WHERE cand_id_c = " & pv_candidD
+
+    ' Print the query string for debugging
+    Response.Write("<p><strong>SQL Query:</strong></p>")
+    Response.Write("<pre>" & Server.HTMLEncode(queryString) & "</pre>")
+    
+    ' TO CHECK SQL STATEMENT
+    'response.end
+
+    ' Execute the SQL query with parameters
+    Dim dbCmd
+    Set dbCmd = Server.CreateObject("ADODB.Command")
+    dbCmd.ActiveConnection = rsys_db
+    dbCmd.CommandText = updateSQL
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@pronoun", adVarChar, adParamInput, 50, Request.Form("canddiv_pronoun_id"))
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@race_ethnicity", adVarChar, adParamInput, 255, race_ethnicity_value)
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@disability", adVarChar, adParamInput, 50, Request.Form("cand_div_disability"))
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@accommodation", adVarChar, adParamInput, 50, Request.Form("cand_div_disability_accommodation"))
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@key_population", adVarChar, adParamInput, 255, Request.Form("cand_div_key_population"))
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_id", adInteger, adParamInput, , pv_candidD)
+    dbCmd.Execute()
+
+    ' Redirect back after save
+    Response.Redirect "appDiv-edit.asp"
+
+ElseIf action = gITEXT("i_13") Then
+    ' Handle the comment action and redirect
+    Response.Redirect "appD-edit.asp"
+End If
+
 '******************************
 ' END D EDIT
 '******************************
@@ -195,7 +251,7 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
 </script>
 
    
-<form class="appForms" action="appD-edit.asp" method="POST" ONSUBMIT="return DataValidation();">
+<form class="appForms" action="appDiv-edit.asp" method="POST" >
 <%
 Function GenerateDropdown(jsonText, dropdownName, selectedValue)
     Dim jsonKey, jsonOptions
@@ -470,11 +526,15 @@ GenerateDropdown jsonText, "genderDropdown", Request.Form("genderDropdown")
           'JAPINFO.movenext
           'loop%>
           <tr valign="bottom">
-            	<td valign="bottom" align='center'>
+
+             
+
+            	<td  colspan="2" valign="bottom" align='center'>
               			<INPUT TYPE="hidden" NAME="cand_id_c" VALUE="<%=pv_candidD%>">
 				<INPUT TYPE="hidden" NAME="editD" VALUE="<% response.write Dcount%>">
 				<INPUT TYPE="hidden" NAME="GOeditD" VALUE="99">
-                <INPUT  TYPE="submit" class="submit" VALUE="<% response.write gITEXT("i_13")%> ">
+                               <input type="submit" name="action" value="Save">
+                <input type="submit" name="action" value="<%= gITEXT("i_13") %>">
 				
                 	</td>
               </tr>
