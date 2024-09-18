@@ -110,7 +110,7 @@ If action = "Save" Then
 
     ' Construct the SQL query string with parameters
     Dim updateSQL, queryString
-    updateSQL = "UPDATE dbo.tx_rsys_candmisc SET canddiv_pronoun_id = ?, cand_div_race_ethnicity = ?, cand_div_disability = ?, cand_div_disability_accommodation = ?, cand_div_key_population = ?, cand_other_pronoun =?, cand_gnd_i=?, cand_other_gender=?, cand_div_genderidentity=? WHERE cand_id_c = ?"
+    updateSQL = "UPDATE dbo.tx_rsys_candmisc SET canddiv_pronoun_id = ?, cand_div_race_ethnicity = ?, cand_div_disability = ?, cand_div_disability_accommodation = ?, cand_div_key_population = ?, cand_other_pronoun =?, cand_gnd_i=?, cand_other_gender=?, cand_div_genderidentity=?, cand_div_other_genderidentity=? WHERE cand_id_c = ?"
     
     ' Build the query string with the parameters replaced for printing
     queryString = "UPDATE tx_rsys_candmisc SET " & _
@@ -121,7 +121,8 @@ If action = "Save" Then
       "cand_div_key_population = '" & Request.Form("cand_div_key_population") & "', " & _
        "cand_other_pronoun = '" & Request.Form("cand_other_pronoun") & "', " & _
           "cand_gnd_i = '" & Request.Form("cand_gnd_i") & "', " & _
-"cand_div_genderidentity = '" & CleanInput(Request.Form("cand_div_genderidentity")) & "' " & _
+"cand_div_genderidentity = '" & CleanInput(Request.Form("cand_div_genderidentity")) & "', " & _
+    "cand_div_other_genderidentity = '" & CleanInput(Request.Form("OtherIdentityTextbox")) & "' " & _
 
     
         "WHERE cand_id_c = " & pv_candidD
@@ -147,6 +148,7 @@ If action = "Save" Then
           dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_gnd_i", adVarChar, adParamInput, 255, Request.Form("cand_gnd_i"))
       dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_other_gender", adVarChar, adParamInput, 255, Request.Form("cand_other_gender"))
      dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_div_genderidentity", adVarChar, adParamInput, 255, CleanInput(Request.Form("cand_div_genderidentity")))
+          dbCmd.Parameters.Append dbCmd.CreateParameter("@OtherIdentityTextbox", adVarChar, adParamInput, 255, Request.Form("OtherIdentityTextbox"))
     dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_id", adInteger, adParamInput, , pv_candidD)
     dbCmd.Execute()
 
@@ -194,7 +196,7 @@ Set JAPINFO2 = obj_db_select_CmdI.Execute(,Array(pv_candidD))
 
 set obj_db_select_Cmd3 = server.CreateObject("adodb.command")
   obj_db_select_Cmd3.ActiveConnection = rsys_db_select
-JAPINFO3sql = "SELECT cand_div_genderidentity, cand_other_gender,cand_gnd_i,cand_other_pronoun,canddiv_pronoun_id,cand_div_race_ethnicity,cand_div_disability,cand_div_disability_accommodation, cand_div_key_population FROM tx_rsys_candmisc WHERE cand_id_c = ? "
+JAPINFO3sql = "SELECT cand_div_other_genderidentity,cand_div_genderidentity, cand_other_gender,cand_gnd_i,cand_other_pronoun,canddiv_pronoun_id,cand_div_race_ethnicity,cand_div_disability,cand_div_disability_accommodation, cand_div_key_population FROM tx_rsys_candmisc WHERE cand_id_c = ? "
 obj_db_select_Cmd3.CommandText = JAPINFO3sql
 
 'response.write JAPINFO3sql
@@ -270,7 +272,8 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
          //    Define an array of dropdown IDs and their corresponding textbox IDs
             var fields = [
                 { dropdownId: 'canddiv_pronoun_id', textboxId: 'otherpronounTextbox' },
-                 { dropdownId: 'cand_gnd_i', textboxId: 'otherGenderTextbox' }
+                 { dropdownId: 'cand_gnd_i', textboxId: 'otherGenderTextbox' },
+                  { dropdownId: 'cand_div_genderidentity', textboxId: 'OtherIdentityTextbox' }
                 // Add more fields here following the same pattern
             ];
 
@@ -286,7 +289,7 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
    
 <form class="appForms" action="appDiv-edit.asp" method="POST" >
 <%
-Function GenerateDropdown(jsonText, dropdownName, selectedValue)
+Function GenerateDropdown(jsonText, dropdownName, selectedValue,OtherTextbox,OtherTextboxValue)
     Dim jsonKey, jsonOptions
     Dim keyStart, keyEnd, optionsStart, optionsEnd, optionsText
     Dim i, optionParts
@@ -327,7 +330,7 @@ Function GenerateDropdown(jsonText, dropdownName, selectedValue)
             <label for="<%= dropdownName %>"><%= jsonKey %></label>
         </td>
         <td valign='top'>
-            <select name="<%= dropdownName %>" id="<%= dropdownName %>" onchange="toggleOther('otherGenderRow', '<%= dropdownName %>')">
+            <select name="<%= dropdownName %>" id="<%= dropdownName %>" onchange="toggleOther('<%= OtherTextbox %>', '<%= dropdownName %>')">
                 <% 
                 ' Populate dropdown options
                 For i = 0 To UBound(optionsArray)
@@ -351,8 +354,8 @@ Function GenerateDropdown(jsonText, dropdownName, selectedValue)
                 Next
                 %>
             </select>
-            <span id="otherGenderRow" style="display:none;">
-                <input type="text" placeholder="specify other" name='<%= dropdownName %>' value="">
+            <span id='<%= OtherTextbox %>' style="display:none;">
+                <input type="text" placeholder="specify other" name='<%= OtherTextbox %>' value='<%= OtherTextboxValue %>'>
             </span>
         </td>
     </tr>
@@ -442,7 +445,7 @@ End Function
     Dim jsonText
     jsonText = gITEXT("i_text7") ' Fetch the JSON string from your function
     ' Call the function to generate the dropdown
-    GenerateDropdown jsonText, "cand_div_genderidentity", JAPINFO3("cand_div_genderidentity")
+    GenerateDropdown jsonText, "cand_div_genderidentity", JAPINFO3("cand_div_genderidentity"),"OtherIdentityTextbox",JAPINFO3("cand_div_other_genderidentity")
     %>
 
 
