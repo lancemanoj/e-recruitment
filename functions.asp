@@ -115,7 +115,7 @@ Function GenerateCheckboxGroup(jsonText, checkboxName, selectedValues, OtherText
     Dim optionsArray
     optionsArray = Split(optionsText, ",")
 
- 
+    Response.Write "<fieldset>"
     
     For i = 0 To UBound(optionsArray)
         optionParts = Split(optionsArray(i), ":")

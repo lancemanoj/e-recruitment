@@ -239,7 +239,18 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
           }
       }
 
-   
+      function toggleOtherTextbox() {
+          var checkboxes = document.getElementsByName('cand_div_race_ethnicity');
+          var otherTextbox = document.getElementById('OtherraceethnicityTextbox');
+          var showOther = false;
+          for (var i = 0; i < checkboxes.length; i++) {
+              if (checkboxes[i].value == '-1' && checkboxes[i].checked) {
+                  showOther = true;
+                  break;
+              }
+          }
+          otherTextbox.style.display = showOther ? 'block' : 'none';
+      }
 
         function toggleDetails() {
         var detailsRow = document.getElementById('detailsRow');
@@ -257,13 +268,14 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
 
         window.onload = function() {
 
+            toggleOtherTextbox();
            
          //    Define an array of dropdown IDs and their corresponding textbox IDs
             var fields = [
                 { dropdownId: 'canddiv_pronoun_id', textboxId: 'otherpronounTextbox' },
                  { dropdownId: 'cand_gnd_i', textboxId: 'otherGenderTextbox' },
-                  { dropdownId: 'cand_div_genderidentity', textboxId: 'OtherIdentityTextbox' },
-                { dropdownId: 'cand_div_race_ethnicity', textboxId: 'OtherraceethnicityTextbox' }
+                  { dropdownId: 'cand_div_genderidentity', textboxId: 'OtherIdentityTextbox' }
+        
                 // Add more fields here following the same pattern
             ];
 
