@@ -378,7 +378,7 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
                 jsonTextRaceEthnicity = gITEXT("i_96") ' Use the correct JSON string function
                 
                 ' Call the GenerateCheckboxGroup function
-                GenerateMultiSelectDropdown jsonTextRaceEthnicity, "cand_div_race_ethnicity", JAPINFO3("cand_div_race_ethnicity"), "OtherraceethnicityTextbox", JAPINFO3("cand_div_other_raceethnicity")
+                GenerateCheckboxGroup jsonTextRaceEthnicity, "cand_div_race_ethnicity", JAPINFO3("cand_div_race_ethnicity"), "OtherraceethnicityTextbox", JAPINFO3("cand_div_other_raceethnicity")
                 %>
     </td>
 </tr>

@@ -73,11 +73,11 @@ Function GenerateDropdown(jsonText, dropdownName, selectedValue,OtherTextbox,Oth
     <% 
 End Function
 
-Function GenerateMultiSelectDropdown(jsonText, dropdownName, selectedValues, OtherTextbox, OtherTextboxValue)
+Function GenerateCheckboxGroup(jsonText, checkboxName, selectedValues, OtherTextbox, OtherTextboxValue)
     Dim jsonKey, optionsStart, optionsEnd, optionsText
     Dim i, optionParts
     Dim optionValue, optionText
-    Dim keyStart, keyEnd
+    Dim keyStart, keyEnd ' Ensure these variables are declared
 
     ' Extract the key for the label
     keyStart = InStr(jsonText, "{") + 1
@@ -91,7 +91,7 @@ Function GenerateMultiSelectDropdown(jsonText, dropdownName, selectedValues, Oth
     ' Remove any extra quotation marks
     jsonKey = Replace(jsonKey, """", "")
 
-    ' Extract the options for the dropdown
+    ' Extract the options for the checkboxes
     optionsStart = InStr(jsonText, ":{") + 2
     optionsEnd = InStrRev(jsonText, "}") - 1
     If optionsEnd > optionsStart Then
@@ -115,11 +115,7 @@ Function GenerateMultiSelectDropdown(jsonText, dropdownName, selectedValues, Oth
     Dim optionsArray
     optionsArray = Split(optionsText, ",")
 
-    ' Start generating the multi-select dropdown
-    Response.Write "<tr>"
-    Response.Write "<td valign='top'><label for='" & dropdownName & "'>" & jsonKey & "</label></td>"
-    Response.Write "<td valign='top'>"
-    Response.Write "<select name='" & dropdownName & "[]' id='" & dropdownName & "' multiple onchange='toggleOtherTextbox()' size='5' style='width: 100%;'>"
+ 
     
     For i = 0 To UBound(optionsArray)
         optionParts = Split(optionsArray(i), ":")
@@ -128,36 +124,33 @@ Function GenerateMultiSelectDropdown(jsonText, dropdownName, selectedValues, Oth
             optionText = Trim(optionParts(1))
             
             ' Check if this option is selected
-            Dim selected
-            selected = ""
+            Dim checked
+            checked = ""
             If InStr(selectedValues, optionValue) > 0 Then
-                selected = "selected"
+                checked = "checked"
             End If
             
-            ' Write option to the dropdown
-            Response.Write "<option value='" & optionValue & "' " & selected & ">" & optionText & "</option>"
+            ' Write checkbox with onchange event
+            Response.Write "<label>"
+            Response.Write "<input type='checkbox' name='" & checkboxName & "' value='" & optionValue & "' " & checked & " onchange='toggleOtherTextbox()'> " & optionText
+            Response.Write "</label><br>"
         End If
     Next
-    Response.Write "</select>"
-    Response.Write "</td></tr>"
+    Response.Write "</fieldset>"
 
-    ' Other textbox (initially hidden and positioned in the next row, right side)
-    Response.Write "<tr>"
-    Response.Write "<td></td>" ' Empty cell for alignment
-    Response.Write "<td valign='top' style='padding-left: 10px;'>"
+    ' Other textbox (initially hidden)
     Response.Write "<span id='" & OtherTextbox & "' style='display:none;'>"
-    Response.Write "<input type='text' placeholder='Specify other " & jsonKey & "' name='" & OtherTextbox & "' value='" & OtherTextboxValue & "' style='width: 150px;'>"
+    Response.Write "<input type='text' placeholder='Specify other " & jsonKey & "' name='" & OtherTextbox & "' value='" & OtherTextboxValue & "'>"
     Response.Write "</span>"
-    Response.Write "</td></tr>"
 
     ' JavaScript function to toggle the visibility of the "Other" textbox
     Response.Write "<script>"
     Response.Write "function toggleOtherTextbox() {"
-    Response.Write "  var select = document.getElementById('" & dropdownName & "');"
+    Response.Write "  var checkboxes = document.getElementsByName('" & checkboxName & "');"
     Response.Write "  var otherTextbox = document.getElementById('" & OtherTextbox & "');"
     Response.Write "  var showOther = false;"
-    Response.Write "  for (var i = 0; i < select.options.length; i++) {"
-    Response.Write "    if (select.options[i].value == '-1' && select.options[i].selected) {"
+    Response.Write "  for (var i = 0; i < checkboxes.length; i++) {"
+    Response.Write "    if (checkboxes[i].value == '-1' && checkboxes[i].checked) {"
     Response.Write "      showOther = true;"
     Response.Write "      break;"
     Response.Write "    }"
@@ -165,6 +158,5 @@ Function GenerateMultiSelectDropdown(jsonText, dropdownName, selectedValues, Oth
     Response.Write "  otherTextbox.style.display = showOther ? 'block' : 'none';"
     Response.Write "}"
     Response.Write "</script>"
-
 End Function
 %>
