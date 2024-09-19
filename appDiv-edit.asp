@@ -226,6 +226,12 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
   
 
 %>
+
+<style>
+    .wide {
+        width: 100%;
+    }
+</style>
 <script type="text/javascript">
       function toggleOther(textboxId,field) {
           var genderDropdown = document.getElementsByName(field)[0];
@@ -400,7 +406,7 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
        	<td><% response.write gITEXT("i_text3")%> </td>
 
        	<td valign='top'>
-     <select name="cand_div_disability" onchange="toggleOther('otherdisabilityTextbox','cand_div_disability')" >
+     <select name="cand_div_disability" class="wide" onchange="toggleOther('otherdisabilityTextbox','cand_div_disability')" >
       
          <option value ="select"> select</option>
     
