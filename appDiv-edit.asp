@@ -381,9 +381,9 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
           		
 <!-- Race/Ethnicity -->
 <tr>
-    <td><% response.write gITEXT("i_95")%></td>
+    
 
-    <td valign='top'>
+   
       <%
                 ' Fetch the JSON data for the race/ethnicity checkboxes
                 Dim jsonTextRaceEthnicity

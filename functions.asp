@@ -90,7 +90,8 @@ Function GenerateCheckboxGroup(jsonText, checkboxName, selectedValues, OtherText
     
     ' Remove any extra quotation marks
     jsonKey = Replace(jsonKey, """", "")
-
+    Response.Write "<td valign='top'><label>" & jsonKey & "</label></td>"
+        Response.Write "<td valign='top'>"
     ' Extract the options for the checkboxes
     optionsStart = InStr(jsonText, ":{") + 2
     optionsEnd = InStrRev(jsonText, "}") - 1
