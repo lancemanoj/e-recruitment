@@ -160,4 +160,109 @@ Function GenerateCheckboxGroup(jsonText, checkboxName, selectedValues, OtherText
     Response.Write "}"
     Response.Write "</script>"
 End Function
+
+        Function UpdateCandidate(rsys_db, pv_candidD, race_ethnicity_value)
+    Dim dbCmd, updateSQL, fullQuery
+
+    ' Update SQL query
+    updateSQL = "UPDATE dbo.tx_rsys_candmisc SET canddiv_pronoun_id = ?, cand_div_race_ethnicity = ?, cand_div_disability = ?, cand_div_disability_accommodation = ?, cand_div_key_population = ?, cand_other_pronoun = ?, cand_gnd_i = ?, cand_other_gender = ?, cand_div_genderidentity = ?, cand_div_other_genderidentity = ?, cand_div_other_raceethnicity = ?, cand_div_disability_accom = ?, cand_div_keyPopulationsExplanation = ? WHERE cand_id_c = ?"
+    
+    ' Build query string for debugging
+    fullQuery = "UPDATE dbo.tx_rsys_candmisc SET " & _
+                "canddiv_pronoun_id = '" & Request.Form("canddiv_pronoun_id") & "', " & _
+                "cand_div_race_ethnicity = '" & race_ethnicity_value & "', " & _
+                "cand_div_disability = '" & Request.Form("cand_div_disability") & "', " & _
+                "cand_div_disability_accommodation = '" & Request.Form("cand_div_disability_accommodation") & "', " & _
+                "cand_div_key_population = '" & Request.Form("cand_div_key_population") & "', " & _
+                "cand_other_pronoun = '" & Request.Form("cand_other_pronoun") & "', " & _
+                "cand_gnd_i = '" & Request.Form("cand_gnd_i") & "', " & _
+                "cand_other_gender = '" & Request.Form("cand_other_gender") & "', " & _
+                "cand_div_genderidentity = '" & CleanInput(Request.Form("cand_div_genderidentity")) & "', " & _
+                "cand_div_other_genderidentity = '" & Request.Form("OtherIdentityTextbox") & "', " & _
+                "cand_div_other_raceethnicity = '" & Request.Form("OtherraceethnicityTextbox") & "', " & _
+                "cand_div_disability_accom = '" & Request.Form("cand_div_disability_accom") & "', " & _
+                "cand_div_keyPopulationsExplanation = '" & Request.Form("cand_div_keyPopulationsExplanation") & "' " & _
+                "WHERE cand_id_c = '" & pv_candidD & "'"
+
+    ' Print the query for debugging
+    Response.Write("SQL Query: " & fullQuery)
+  
+
+    ' Execute the update query
+    Set dbCmd = Server.CreateObject("ADODB.Command")
+    dbCmd.ActiveConnection = rsys_db
+    dbCmd.CommandText = updateSQL
+
+    ' Append parameters for update query
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@pronoun", adVarChar, adParamInput, 50, Request.Form("canddiv_pronoun_id"))
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@race_ethnicity", adVarChar, adParamInput, 255, race_ethnicity_value)
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@disability", adVarChar, adParamInput, 50, Request.Form("cand_div_disability"))
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@accommodation", adVarChar, adParamInput, 50, Request.Form("cand_div_disability_accommodation"))
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@key_population", adVarChar, adParamInput, 255, Request.Form("cand_div_key_population"))
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_other_pronoun", adVarChar, adParamInput, 255, Request.Form("cand_other_pronoun"))
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_gnd_i", adVarChar, adParamInput, 255, Request.Form("cand_gnd_i"))
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_other_gender", adVarChar, adParamInput, 255, Request.Form("cand_other_gender"))
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_div_genderidentity", adVarChar, adParamInput, 255, CleanInput(Request.Form("cand_div_genderidentity")))
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@OtherIdentityTextbox", adVarChar, adParamInput, 255, Request.Form("OtherIdentityTextbox"))
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@OtherraceethnicityTextbox", adVarChar, adParamInput, 255, Request.Form("OtherraceethnicityTextbox"))
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_div_disability_accom", adVarChar, adParamInput, 255, Request.Form("cand_div_disability_accom"))
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_div_keyPopulationsExplanation", adVarChar, adParamInput, 255, Request.Form("cand_div_keyPopulationsExplanation"))
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_id", adInteger, adParamInput, , pv_candidD)
+
+    dbCmd.Execute()
+End Function
+
+  Function InsertOrUpdateCandidate(rsys_db, pv_candidD, race_ethnicity_value)
+    Dim dbCmd, checkSQL, insertSQL, updateSQL, rs, fullQuery
+
+    ' Check if the record exists
+    checkSQL = "SELECT COUNT(*) FROM dbo.tx_rsys_candmisc WHERE cand_id_c = ?"
+    Set dbCmd = Server.CreateObject("ADODB.Command")
+    dbCmd.ActiveConnection = rsys_db
+    dbCmd.CommandText = checkSQL
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_id", adInteger, adParamInput, , pv_candidD)
+
+    Set rs = dbCmd.Execute()
+
+    If Not rs.EOF Then
+        If rs(0) = 0 Then
+            ' Record does not exist, so insert
+            insertSQL = "INSERT INTO dbo.tx_rsys_candmisc (canddiv_pronoun_id, cand_div_race_ethnicity, cand_div_disability, cand_div_disability_accommodation, cand_div_key_population, cand_other_pronoun, cand_gnd_i, cand_other_gender, cand_div_genderidentity, cand_div_other_genderidentity, cand_div_other_raceethnicity, cand_div_disability_accom, cand_div_keyPopulationsExplanation, cand_id_c) " & _
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            fullQuery = "INSERT INTO dbo.tx_rsys_candmisc (canddiv_pronoun_id, cand_div_race_ethnicity, cand_div_disability, cand_div_disability_accommodation, cand_div_key_population, cand_other_pronoun, cand_gnd_i, cand_other_gender, cand_div_genderidentity, cand_div_other_genderidentity, cand_div_other_raceethnicity, cand_div_disability_accom, cand_div_keyPopulationsExplanation, cand_id_c) " & _
+                        "VALUES ('" & Request.Form("canddiv_pronoun_id") & "', '" & race_ethnicity_value & "', '" & Request.Form("cand_div_disability") & "', '" & Request.Form("cand_div_disability_accommodation") & "', '" & Request.Form("cand_div_key_population") & "', '" & Request.Form("cand_other_pronoun") & "', '" & Request.Form("cand_gnd_i") & "', '" & Request.Form("cand_other_gender") & "', '" & CleanInput(Request.Form("cand_div_genderidentity")) & "', '" & Request.Form("OtherIdentityTextbox") & "', '" & Request.Form("OtherraceethnicityTextbox") & "', '" & Request.Form("cand_div_disability_accom") & "', '" & Request.Form("cand_div_keyPopulationsExplanation") & "', '" & pv_candidD & "')"
+            
+            ' Print the query for debugging
+            Response.Write("SQL Query: " & fullQuery)
+            Response.End
+
+            Set dbCmd = Server.CreateObject("ADODB.Command")
+            dbCmd.ActiveConnection = rsys_db
+            dbCmd.CommandText = insertSQL
+
+            ' Append parameters for insert query
+            dbCmd.Parameters.Append dbCmd.CreateParameter("@pronoun", adVarChar, adParamInput, 50, Request.Form("canddiv_pronoun_id"))
+            dbCmd.Parameters.Append dbCmd.CreateParameter("@race_ethnicity", adVarChar, adParamInput, 255, race_ethnicity_value)
+            dbCmd.Parameters.Append dbCmd.CreateParameter("@disability", adVarChar, adParamInput, 50, Request.Form("cand_div_disability"))
+            dbCmd.Parameters.Append dbCmd.CreateParameter("@accommodation", adVarChar, adParamInput, 50, Request.Form("cand_div_disability_accommodation"))
+            dbCmd.Parameters.Append dbCmd.CreateParameter("@key_population", adVarChar, adParamInput, 255, Request.Form("cand_div_key_population"))
+            dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_other_pronoun", adVarChar, adParamInput, 255, Request.Form("cand_other_pronoun"))
+            dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_gnd_i", adVarChar, adParamInput, 255, Request.Form("cand_gnd_i"))
+            dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_other_gender", adVarChar, adParamInput, 255, Request.Form("cand_other_gender"))
+            dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_div_genderidentity", adVarChar, adParamInput, 255, CleanInput(Request.Form("cand_div_genderidentity")))
+            dbCmd.Parameters.Append dbCmd.CreateParameter("@OtherIdentityTextbox", adVarChar, adParamInput, 255, Request.Form("OtherIdentityTextbox"))
+            dbCmd.Parameters.Append dbCmd.CreateParameter("@OtherraceethnicityTextbox", adVarChar, adParamInput, 255, Request.Form("OtherraceethnicityTextbox"))
+            dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_div_disability_accom", adVarChar, adParamInput, 255, Request.Form("cand_div_disability_accom"))
+            dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_div_keyPopulationsExplanation", adVarChar, adParamInput, 255, Request.Form("cand_div_keyPopulationsExplanation"))
+            dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_id", adInteger, adParamInput, , pv_candidD)
+
+            dbCmd.Execute()
+
+        Else
+            ' Existing record, proceed with update
+            Call UpdateCandidate(rsys_db, pv_candidD, race_ethnicity_value)
+        End If
+    End If
+End Function
+
 %>
