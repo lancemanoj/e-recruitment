@@ -111,7 +111,7 @@ If action = "Save" Then
 
     ' Construct the SQL query string with parameters
     Dim updateSQL, queryString
-    updateSQL = "UPDATE dbo.tx_rsys_candmisc SET canddiv_pronoun_id = ?, cand_div_race_ethnicity = ?, cand_div_disability = ?, cand_div_disability_accommodation = ?, cand_div_key_population = ?, cand_other_pronoun =?, cand_gnd_i=?, cand_other_gender=?, cand_div_genderidentity=?, cand_div_other_genderidentity=?, cand_div_other_raceethnicity=? WHERE cand_id_c = ?"
+    updateSQL = "UPDATE dbo.tx_rsys_candmisc SET canddiv_pronoun_id = ?, cand_div_race_ethnicity = ?, cand_div_disability = ?, cand_div_disability_accommodation = ?, cand_div_key_population = ?, cand_other_pronoun =?, cand_gnd_i=?, cand_other_gender=?, cand_div_genderidentity=?, cand_div_other_genderidentity=?, cand_div_other_raceethnicity=?, cand_div_disability_accom=?,cand_div_keyPopulationsExplanation=? WHERE cand_id_c = ?"
     
     ' Build the query string with the parameters replaced for printing
     queryString = "UPDATE tx_rsys_candmisc SET " & _
@@ -123,8 +123,10 @@ If action = "Save" Then
        "cand_other_pronoun = '" & Request.Form("cand_other_pronoun") & "', " & _
           "cand_gnd_i = '" & Request.Form("cand_gnd_i") & "', " & _
 "cand_div_genderidentity = '" & CleanInput(Request.Form("cand_div_genderidentity")) & "', " & _
-    "cand_div_other_genderidentity = '" & CleanInput(Request.Form("OtherIdentityTextbox")) & "', " & _
-      "cand_div_other_raceethnicity = '" & CleanInput(Request.Form("OtherraceethnicityTextbox")) & "' " & _
+    "cand_div_other_genderidentity = '" & Request.Form("OtherIdentityTextbox") & "', " & _
+      "cand_div_other_raceethnicity = '" & Request.Form("OtherraceethnicityTextbox") & "', " & _
+      "cand_div_disability_accom = '" & Request.Form("cand_div_disability_accom") & "' " & _
+    
     
         "WHERE cand_id_c = " & pv_candidD
 
@@ -151,6 +153,11 @@ If action = "Save" Then
      dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_div_genderidentity", adVarChar, adParamInput, 255, CleanInput(Request.Form("cand_div_genderidentity")))
           dbCmd.Parameters.Append dbCmd.CreateParameter("@OtherIdentityTextbox", adVarChar, adParamInput, 255, Request.Form("OtherIdentityTextbox"))
           dbCmd.Parameters.Append dbCmd.CreateParameter("@OtherraceethnicityTextbox", adVarChar, adParamInput, 255, Request.Form("OtherraceethnicityTextbox"))
+           dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_div_disability_accom", adVarChar, adParamInput, 255, Request.Form("cand_div_disability_accom"))
+    dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_div_keyPopulationsExplanation", adVarChar, adParamInput, 255, Request.Form("cand_div_keyPopulationsExplanation"))
+    
+    
+
     dbCmd.Parameters.Append dbCmd.CreateParameter("@cand_id", adInteger, adParamInput, , pv_candidD)
     dbCmd.Execute()
 
@@ -198,7 +205,7 @@ Set JAPINFO2 = obj_db_select_CmdI.Execute(,Array(pv_candidD))
 
 set obj_db_select_Cmd3 = server.CreateObject("adodb.command")
   obj_db_select_Cmd3.ActiveConnection = rsys_db_select
-JAPINFO3sql = "SELECT cand_div_other_raceethnicity, cand_div_other_genderidentity,cand_div_genderidentity, cand_other_gender,cand_gnd_i,cand_other_pronoun,canddiv_pronoun_id,cand_div_race_ethnicity,cand_div_disability,cand_div_disability_accommodation, cand_div_key_population FROM tx_rsys_candmisc WHERE cand_id_c = ? "
+JAPINFO3sql = "SELECT  cand_div_keyPopulationsExplanation,cand_div_disability_accom, cand_div_other_raceethnicity, cand_div_other_genderidentity,cand_div_genderidentity, cand_other_gender,cand_gnd_i,cand_other_pronoun,canddiv_pronoun_id,cand_div_race_ethnicity,cand_div_disability,cand_div_disability_accommodation, cand_div_key_population FROM tx_rsys_candmisc WHERE cand_id_c = ? "
 obj_db_select_Cmd3.CommandText = JAPINFO3sql
 
 'response.write JAPINFO3sql
@@ -275,7 +282,21 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
         window.onload = function() {
 
             toggleOtherTextbox();
-           
+            
+
+            var disabilitySelect = document.getElementsByName('cand_div_disability')[0];
+            if (disabilitySelect.value === "0") {
+                document.getElementById('otherdisabilityTextbox').style.display = 'table-row';
+            }
+
+            // Check for cand_div_disability_accommodation on page load
+            var disabilityAccomSelect = document.getElementsByName('cand_div_disability_accommodation')[0];
+            if (disabilityAccomSelect.value === "0") {
+                document.getElementById('otherdisabilityaccomTextbox').style.display = 'table-row';
+            } else {
+                document.getElementById('otherdisabilityaccomTextbox').style.display = 'none';
+            }
+
          //    Define an array of dropdown IDs and their corresponding textbox IDs
             var fields = [
                 { dropdownId: 'canddiv_pronoun_id', textboxId: 'otherpronounTextbox' },
@@ -373,7 +394,7 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
                      <span id="otherGenderTextbox" style="display:none;">
                     <input type="text"  placeholder="specify other" name="cand_other_gender" value="<% =JAPINFO3("cand_other_gender") %>">
                 </span>
-         
+        
     </td>
                <!-- The "Other" textbox, initially hidden, placed in the same row -->
 
@@ -426,7 +447,7 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
       	<td><% response.write gITEXT("i_83")%> </td>
 
       	<td valign='top'>
-    <select name="cand_div_disability_accommodation"  onchange="toggleOther('otherdisabilityaccomTextbox','cand_div_disability_accommodation')"; >
+    <select class="wide" name="cand_div_disability_accommodation"  onchange="toggleOther('otherdisabilityaccomTextbox','cand_div_disability_accommodation')"; >
      
         <option value ="select"> select</option>
    
@@ -439,17 +460,15 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
 
       	</td>
 </tr>
-
-             	    <tr id="otherdisabilityaccomTextbox" style="display:none">
-      	<td><% response.write gITEXT("i_84")%> </td>
-
-      	<td valign='top'>
-             
-
-             <input type="text" placeholder="specify reasonable accomation" name="cand_div_disability_accom"  value="">
-
-      	</td>
+    <tr id="otherdisabilityaccomTextbox" style="display:none">
+    <td><% response.write gITEXT("i_84")%></td>
+    <td valign='top'>
+        <textarea class="wide" placeholder="Specify reasonable accommodation" name="cand_div_disability_accom" rows="4" cols="50">
+            <% =JAPINFO3("cand_div_disability_accom") %>
+        </textarea>
+    </td>
 </tr>
+
 
 
 
@@ -461,25 +480,23 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
         <td>
             <label for="keyPopulationsExplanation">You may want to explain whether and how you identify as part of key populations. 
 </label>
-            <textarea id="keyPopulationsExplanation" name="keyPopulationsExplanation" rows="4" cols="50"></textarea>
+            <textarea id="cand_div_keyPopulationsExplanation" name="cand_div_keyPopulationsExplanation" rows="4" cols="50">
+                <%=Server.HTMLEncode(JAPINFO3("cand_div_keyPopulationsExplanation") & "")%>
+ 
+</textarea>
         </td>
     </tr>
     
           		<!-- Key Populations -->
           	<tr>
         <td>
-            <button type="button" onclick="toggleDetails()">Show Details</button>
+            <button type="button" onclick="toggleDetails()">Hide Details</button>
         </td>
     </tr>
     <!-- Paragraph Row (Hidden by Default) -->
-<tr id="detailsRow" style="display:none;">
+<tr id="detailsRow" style="display:block;">
     <td>
-        <p>
-            The engagement of key populations is critical to a successful HIV response. Leadership by and greater involvement of communities living with and affected by HIV is essential to ending AIDS, therefore, applications from candidates belonging to these communities are especially welcome.
-            <br><br>
-            In light of these goals, we ask if you identify as part of key population(s).
-            Key populations, or key populations at higher risk, are groups of people who are more likely to be exposed to HIV or to transmit it and whose engagement is critical to a successful HIV response. In all countries, key populations include people living with HIV. In most settings, men who have sex with men, trans(gender) people, people who inject drugs, and sex workers and their clients are at higher risk of exposure to HIV than other groups. These populations often suffer from punitive laws or stigmatizing policies, and they are among the most likely to be exposed to HIV.
-        </p>
+        <%=response.write(gITEXT("i_99") & "")%>
     </td>
 </tr>
 
