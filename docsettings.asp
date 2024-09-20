@@ -216,7 +216,7 @@ if session("template_org_code") = 3000 then%>
 
 if session("template_org_code") = 1500 then%>
 <tr>	
-	<td>&nbsp;&nbsp;&nbsp;<input type='checkbox' name="app" value="DV"<%If session("OKG") <> "0" AND session("OKGref") <> "0" then%> checked<%end if%>> <%=gITEXT("i_51")%></td>	
+	<td>&nbsp;&nbsp;&nbsp;<input type='checkbox' name="app" value="Div"<%If session("OKG") <> "0" AND session("OKGref") <> "0" then%> checked<%end if%>> <%=gITEXT("i_51")%></td>	
 	<td></td> 
 </tr>
 <%end if%>

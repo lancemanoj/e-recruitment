@@ -410,6 +410,18 @@ Dim gITEXTTsql, gITEXTT
 end if
 
 
+
+' BEGIN CHECK IF PERSON SELECTED SECTION Diversity
+if instr(pv_parts,"Div,") then
+Dim gITEXTDivsql, gITEXTDiv
+'<<--Modified by Interface on 07/25/2007
+	gITEXTDivsql = "SELECT top 1 i_text3,i_text4,i_text5, i_1, i_4, i_23, i_text1, i_27,i_5, i_16, i_17, i_18,i_32,i_15, i_9,i_11, i_10,i_19, i_20, i_29,i_30, i_22, i_21,i_13,i_76,i_83,i_84, i_87,i_88,i_89,i_91,i_92,i_93,i_94,i_95,i_96,i_97,i_98,i_99,i_text7 FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'Div' "
+	obj_int_select_CmdII.CommandText = gITEXTDivsql
+	Set gITEXTDiv = obj_int_select_CmdII.Execute(,Array(pv_new_sessioncode,session("lng")))
+'-->>
+end if
+
+
 if pv_doc_type = "pdf" then
 	widther = "100%"
 elseif pv_doc_type = "doc" then
@@ -5627,6 +5639,32 @@ f.WriteLine "<p><br></p>"
         end if
 
 ' END CHECK IF PERSON SELECTED SECTION GR
+
+   ' Response.Write "<br>T Selected Value: " & pv_parts
+'Response.End
+
+If InStr(pv_parts, "Div,") Then
+    ' Write the table start tag
+    f.WriteLine "<table border='1' width='100%' cellpadding='5' cellspacing='0'>"
+    
+    ' Loop through the records and construct the table rows
+    Do While Not gITEXTDiv.EOF
+        f.WriteLine "<tr><td><b>Personal Pronouns:</b></td><td>" & gITEXTDiv("i_text3") & "</td></tr>"
+        f.WriteLine "<tr><td><b>Gender:</b></td><td>" & gITEXTDiv("i_1") & "</td></tr>"
+        f.WriteLine "<tr><td><b>Gender Identity:</b></td><td>" & gITEXTDiv("i_23") & "</td></tr>"
+        f.WriteLine "<tr><td><b>Race/Ethnicity:</b></td><td>" & gITEXTDiv("i_text1") & "</td></tr>"
+        f.WriteLine "<tr><td><b>Disability:</b></td><td>" & gITEXTDiv("i_16") & "</td></tr>"
+        f.WriteLine "<tr><td><b>Accommodation:</b></td><td>" & gITEXTDiv("i_19") & "</td></tr>"
+        f.WriteLine "<tr><td><b>Key Populations:</b></td><td>" & gITEXTDiv("i_27") & "</td></tr>"
+        gITEXTDiv.MoveNext
+    Loop
+    
+    ' Write the table end tag
+    f.WriteLine "</table>"
+End If
+
+
+
 
 ' ******************************************************************************
 ' SECTION VERIFICATION
