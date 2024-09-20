@@ -411,11 +411,11 @@ end if
 
 
 
-' BEGIN CHECK IF PERSON SELECTED SECTION Diversity
+' BEGIN CHECK IF PERSON SELECTED SECTION 5246
 if instr(pv_parts,"Div,") then
 Dim gITEXTDivsql, gITEXTDiv
 '<<--Modified by Interface on 07/25/2007
-	gITEXTDivsql = "SELECT top 1 i_text3,i_text4,i_text5, i_1, i_4, i_23, i_text1, i_27,i_5, i_16, i_17, i_18,i_32,i_15, i_9,i_11, i_10,i_19, i_20, i_29,i_30, i_22, i_21,i_13,i_76,i_83,i_84, i_87,i_88,i_89,i_91,i_92,i_93,i_94,i_95,i_96,i_97,i_98,i_99,i_text7 FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'Div' "
+	gITEXTDivsql = "SELECT top 1 i_text3,i_text4,i_text5, i_1, i_4, i_23, i_text1, i_27,i_5,i_6, i_16, i_17, i_18,i_32,i_15, i_9,i_11, i_10,i_19, i_20, i_29,i_30, i_22, i_21,i_13,i_76,i_83,i_84, i_87,i_88,i_89,i_91,i_92,i_93,i_94,i_95,i_96,i_97,i_98,i_99,i_text7 FROM tr_rsys_itext WHERE itext_thisorg_c = ? AND itext_lng_c = ? AND itext_page_c = 'Div' "
 	obj_int_select_CmdII.CommandText = gITEXTDivsql
 	Set gITEXTDiv = obj_int_select_CmdII.Execute(,Array(pv_new_sessioncode,session("lng")))
 '-->>
@@ -5234,20 +5234,20 @@ if instr(pv_parts,"T,") then
 	obj_int_select_CmdII.CommandText = gITEXTT2sql
 	set gITEXTT2 = obj_int_select_CmdII.Execute(,Array(pv_new_sessioncode,session("lng")))
 
-	f.WriteLine "<!--Test45-->"
-'Add by atul for table od content
-f.WriteLine "<p><br></p>"
-			f.WriteLine "<h2><font color=""" & g_headerColor & """>" & gITEXTT2("i_1") & "</font></h2>"
-	        f.WriteLine "<TABLE border=""1"" bordercolor=""black"" cellpadding=""2"" width=""" &  widther & """ align=""center"">"
-'Atul make  space and colspan=7 from 6
+	    f.WriteLine "<!--Test45-->"
+    'Add by atul for table od content
+    f.WriteLine "<p><br></p>"
+			    f.WriteLine "<h2><font color=""" & g_headerColor & """>" & gITEXTT2("i_1") & "</font></h2>"
+	            f.WriteLine "<TABLE border=""1"" bordercolor=""black"" cellpadding=""2"" width=""" &  widther & """ align=""center"">"
+    'Atul make  space and colspan=7 from 6
 	        
-'f.WriteLine "<TR><th colspan=""7""> <a style=""abcpdf-tag-visible: true;"" id='" & gITEXTT2("i_1") & "_|" & intNumber  &  "'>" & gITEXTT2("i_1") & "</a></th></tr>"
-'Commented by atul for table of content
-'f.WriteLine "<TR><td valign=""top"" colspan=""7"" bgcolor=""" & gITEXTPH("i_60") & """><h2><font color=""" & g_headerColor & """>" & gITEXTT2("i_1") & "</font></h2></TD></tr>"
+    'f.WriteLine "<TR><th colspan=""7""> <a style=""abcpdf-tag-visible: true;"" id='" & gITEXTT2("i_1") & "_|" & intNumber  &  "'>" & gITEXTT2("i_1") & "</a></th></tr>"
+    'Commented by atul for table of content
+    'f.WriteLine "<TR><td valign=""top"" colspan=""7"" bgcolor=""" & gITEXTPH("i_60") & """><h2><font color=""" & g_headerColor & """>" & gITEXTT2("i_1") & "</font></h2></TD></tr>"
 	        
-            f.WriteLine "<tr>"
-'Atul make  colspan=7 from 6
-            f.WriteLine "<td valign=""bottom"" class=""textitalic"" colspan=""7"">" & gITEXTT("i_4")& "</td>"
+                f.WriteLine "<tr>"
+    'Atul make  colspan=7 from 6
+                f.WriteLine "<td valign=""bottom"" class=""textitalic"" colspan=""7"">" & gITEXTT("i_4")& "</td>"
             f.WriteLine "</tr>"
 
 	        
@@ -5640,28 +5640,42 @@ f.WriteLine "<p><br></p>"
 
 ' END CHECK IF PERSON SELECTED SECTION GR
 
-   ' Response.Write "<br>T Selected Value: " & pv_parts
+   ' Response.Write "<br>T Divercity Section: " & pv_parts
 'Response.End
 
 If InStr(pv_parts, "Div,") Then
     ' Write the table start tag
-    f.WriteLine "<table border='1' width='100%' cellpadding='5' cellspacing='0'>"
+
+      f.WriteLine "<p><br></p>"
+    f.WriteLine "<h2><font color=""" & g_headerColor & """>" & gITEXTDiv("i_1") & "</font></h2>"
+
+    f.WriteLine "<TABLE border=""1"" bordercolor=""black"" cellpadding=""2"" align=""center"">"
     
-    ' Loop through the records and construct the table rows
+    ' Write the header row with the value from i_1 in blue
+    f.WriteLine "<TR s border=""1"" bgcolor='" & orgColor & "' >"
+    f.WriteLine "<td colspan=""1"" style=""font-weight: bold; text-align: left;"">" & gITEXTDiv("i_1") & "</td>"
+    f.WriteLine "</TR>"
+
+    ' Loop through the records and construct the table rows with one field each
     Do While Not gITEXTDiv.EOF
-        f.WriteLine "<tr><td><b>Personal Pronouns:</b></td><td>" & gITEXTDiv("i_text3") & "</td></tr>"
-        f.WriteLine "<tr><td><b>Gender:</b></td><td>" & gITEXTDiv("i_1") & "</td></tr>"
-        f.WriteLine "<tr><td><b>Gender Identity:</b></td><td>" & gITEXTDiv("i_23") & "</td></tr>"
-        f.WriteLine "<tr><td><b>Race/Ethnicity:</b></td><td>" & gITEXTDiv("i_text1") & "</td></tr>"
-        f.WriteLine "<tr><td><b>Disability:</b></td><td>" & gITEXTDiv("i_16") & "</td></tr>"
-        f.WriteLine "<tr><td><b>Accommodation:</b></td><td>" & gITEXTDiv("i_19") & "</td></tr>"
-        f.WriteLine "<tr><td><b>Key Populations:</b></td><td>" & gITEXTDiv("i_27") & "</td></tr>"
+        f.WriteLine "<tr><td><b>Personal Pronouns:</b> " & gITEXTDiv("i_text3") & "</td></tr>"
+        f.WriteLine "<tr><td><b>Gender:</b> " & gITEXTDiv("i_1") & "</td></tr>"
+        f.WriteLine "<tr><td><b>Gender Identity:</b> " & gITEXTDiv("i_23") & "</td></tr>"
+        f.WriteLine "<tr><td><b>Race/Ethnicity:</b> " & gITEXTDiv("i_text1") & "</td></tr>"
+        f.WriteLine "<tr><td><b>Disability:</b> " & gITEXTDiv("i_16") & "</td></tr>"
+        f.WriteLine "<tr><td><b>Accommodation:</b> " & gITEXTDiv("i_19") & "</td></tr>"
+        f.WriteLine "<tr><td><b>Key Populations:</b> " & gITEXTDiv("i_27") & "</td></tr>"
+
+        ' Move to the next record
         gITEXTDiv.MoveNext
     Loop
-    
+
     ' Write the table end tag
     f.WriteLine "</table>"
 End If
+
+
+
 
 
 
