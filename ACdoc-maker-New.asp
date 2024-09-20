@@ -5653,7 +5653,7 @@ If InStr(pv_parts, "Div,") Then
     
     ' Write the header row with the value from i_1 in blue
     f.WriteLine "<TR s border=""1"" bgcolor='" & orgColor & "' >"
-    f.WriteLine "<td colspan=""1"" style=""font-weight: bold; text-align: left;"">" & gITEXTDiv("i_1") & "</td>"
+    f.WriteLine "<td color=""" & g_headerColor & """ colspan=""1"" style=""font-weight: bold; text-align: left;"">" & gITEXTDiv("i_1") & "</td>"
     f.WriteLine "</TR>"
 
     ' Loop through the records and construct the table rows with one field each
