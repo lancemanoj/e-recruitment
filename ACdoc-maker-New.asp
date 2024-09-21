@@ -5677,19 +5677,17 @@ If InStr(pv_parts, "Div,") Then
         ' Check if 'candmisc_maxteam_c' is 0, then write "0"
       
         
-        ' Write the formatted capacity data
-        f.WriteLine "<td valign=""top"" colspan=""2""><strong>" & GETDIV("cand_div_keyPopulationsExplanation") & "</strong></td>"
 	    
 	   
     ' Loop through the records and construct the table rows with one field each
     Do While Not gITEXTDiv.EOF
-        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_91") &" :</b>  ________ </td></tr>"
-        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_87") &":</b> " & gITEXTDiv("i_1") & "</td></tr>"
-        f.WriteLine "<tr><td><b>Gender Identity:</b> " & gITEXTDiv("i_23") & "</td></tr>"
-        f.WriteLine "<tr><td><b>Race/Ethnicity:</b> " & gITEXTDiv("i_text1") & "</td></tr>"
-        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_text3") &":</b> " & gITEXTDiv("i_16") & "</td></tr>"
-        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_83") &":</b> " & gITEXTDiv("i_83") & "</td></tr>"
-        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_84") &":</b> " & gITEXTDiv("i_27") & "</td></tr>"
+        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_91") &" :</b>  " & GETDIV("canddiv_pronoun_id") & " </td></tr>"
+        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_87") &":</b>  " & GETDIV("cand_gnd_i") & " </td></tr>"
+        f.WriteLine "<tr><td><b>Gender Identity:</b>  " & GETDIV("cand_div_genderidentity") & " </td></tr>"
+        f.WriteLine "<tr><td><b>Race/Ethnicity:</b> " & GETDIV("cand_div_race_ethnicity") & " </td></tr>"
+        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_text3") &":</b> " & GETDIV("cand_div_disability") & "</td></tr>"
+        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_83") &":</b> " & GETDIV("cand_div_disability_accommodation") & "</td></tr>"
+        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_84") &":</b> " & GETDIV("cand_div_disability_accom") & "</td></tr>"
 
         ' Move to the next record
         gITEXTDiv.MoveNext
