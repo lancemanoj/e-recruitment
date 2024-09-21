@@ -309,15 +309,13 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
            	<td><% response.write gITEXT("i_91")%> </td>
 
            	<td valign='top'>
-            <select name="canddiv_pronoun_id"  onchange="toggleOther('otherpronounTextbox','canddiv_pronoun_id');" >
-             
-                <option value ="select"> select</option>
-           
-                   <option value="1" <% If JAPINFO3("canddiv_pronoun_id") = "1" Then Response.Write("selected") %>><% response.write gITEXT("i_92")%></OPTION>
-                   <option value="2" <% If JAPINFO3("canddiv_pronoun_id") = "2" Then Response.Write("selected") %>><% response.write gITEXT("i_93")%></OPTION>
-                   <option value="3" <% If JAPINFO3("canddiv_pronoun_id") = "3" Then Response.Write("selected") %>><% response.write gITEXT("i_94")%></OPTION>
-                     <option value="0" <% If JAPINFO3("canddiv_pronoun_id") = "0" Then Response.Write("selected") %>><% response.write gITEXT("i_76")%></OPTION>
-            </select>
+           <select name="canddiv_pronoun_id" onchange="toggleOther('otherpronounTextbox', 'canddiv_pronoun_id');">
+    <option value="select">select</option>
+    <option value="<%= gITEXT("i_92") %>" <% If JAPINFO3("canddiv_pronoun_id") = gITEXT("i_92") Then Response.Write("selected") %>><%= gITEXT("i_92") %></option>
+    <option value="<%= gITEXT("i_93") %>" <% If JAPINFO3("canddiv_pronoun_id") = gITEXT("i_93") Then Response.Write("selected") %>><%= gITEXT("i_93") %></option>
+    <option value="<%= gITEXT("i_94") %>" <% If JAPINFO3("canddiv_pronoun_id") = gITEXT("i_94") Then Response.Write("selected") %>><%= gITEXT("i_94") %></option>
+   <option value="0" <% If JAPINFO3("canddiv_pronoun_id") = "0" Then Response.Write("selected") %>><% response.write gITEXT("i_76")%></OPTION>
+</select>
 
                          <span id="otherpronounTextbox" style="display:none;">
    
@@ -337,8 +335,8 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
      
          
                     <select name="cand_gnd_i" onchange="toggleOther('otherGenderTextbox','cand_gnd_i');">
-                        <OPTION value="1" <% If JAPINFO3("cand_gnd_i") = "1" then%> SELECTED<% End If%>><% response.write gITEXT("i_88")%></OPTION>
-                        <OPTION value="2" <% If JAPINFO3("cand_gnd_i") = "2" then%> SELECTED<% End If%>><% response.write gITEXT("i_89")%></OPTION>
+                        <OPTION value="<%= gITEXT("i_88") %>" <% If JAPINFO3("cand_gnd_i") =gITEXT("i_88") then%> SELECTED<% End If%>><% response.write gITEXT("i_88")%></OPTION>
+                        <OPTION value="<%= gITEXT("i_89") %>" <% If JAPINFO3("cand_gnd_i") = gITEXT("i_89") then%> SELECTED<% End If%>><% response.write gITEXT("i_89")%></OPTION>
                         <OPTION value="0" <% If JAPINFO3("cand_gnd_i") = "0" then%> SELECTED<% End If%>><% response.write gITEXT("i_76")%></OPTION>
                     </select>
                
@@ -383,7 +381,7 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
          <option value ="select"> select</option>
     
             <option value="0" <% If JAPINFO3("cand_div_disability") = "0" Then Response.Write("selected") %>><% response.write gITEXT("i_text4")%></OPTION>
-            <option value="2" <% If JAPINFO3("cand_div_disability") = "2" Then Response.Write("selected") %>><% response.write gITEXT("i_text5")%></OPTION>
+            <option value="1" <% If JAPINFO3("cand_div_disability") = "1" Then Response.Write("selected") %>><% response.write gITEXT("i_text5")%></OPTION>
            
      </select>
 
@@ -402,7 +400,7 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
      
         <option value ="select"> select</option>
    
-           <option value="2" <% If JAPINFO3("cand_div_disability_accommodation") = "2" Then Response.Write("selected") %>><% response.write gITEXT("i_text5")%></OPTION>
+           <option value="1" <% If JAPINFO3("cand_div_disability_accommodation") = "1" Then Response.Write("selected") %>><% response.write gITEXT("i_text5")%></OPTION>
            <option value="0" <% If JAPINFO3("cand_div_disability_accommodation") = "0" Then Response.Write("selected") %>><% response.write gITEXT("i_text4")%></OPTION>
           
     </select>

@@ -5656,15 +5656,40 @@ If InStr(pv_parts, "Div,") Then
     f.WriteLine "<td color=""" & g_headerColor & """ colspan=""1"" style=""font-weight: bold; text-align: left;"">" & gITEXTDiv("i_1") & "</td>"
     f.WriteLine "</TR>"
 
+	' query to get value from misc table
+	' Declare variables if not already declared
+Dim GETDIVsql, GETDIV
+
+' Check if "RC," is present in pv_parts
+If InStr(pv_parts, "Div,") Then
+    ' Update the SQL query and variable names
+    GETDIVsql = "SELECT cand_div_keyPopulationsExplanation,cand_div_disability_accom, cand_div_other_raceethnicity, cand_div_other_genderidentity,cand_div_genderidentity, cand_other_gender,cand_gnd_i,cand_other_pronoun,canddiv_pronoun_id,cand_div_race_ethnicity,cand_div_disability,cand_div_disability_accommodation, cand_div_key_population FROM tx_rsys_candmisc WHERE cand_id_c = " & applicant_id
+    
+    ' Initialize the recordset and set timeout
+    Set GETDIV = Server.CreateObject("ADODB.RecordSet")
+    rsys_db_select.CommandTimeout = 320
+    
+    ' Open the recordset with the query
+    GETDIV.Open GETDIVsql, rsys_db_select, 1, 1
+    
+    ' Check if there are any records returned
+    If Not GETDIV.EOF Then
+        ' Check if 'candmisc_maxteam_c' is 0, then write "0"
+      
+        
+        ' Write the formatted capacity data
+        f.WriteLine "<td valign=""top"" colspan=""2""><strong>" & GETDIV("cand_div_keyPopulationsExplanation") & "</strong></td>"
+	    
+	   
     ' Loop through the records and construct the table rows with one field each
     Do While Not gITEXTDiv.EOF
-        f.WriteLine "<tr><td><b>Personal Pronouns:</b> " & gITEXTDiv("i_text3") & "</td></tr>"
-        f.WriteLine "<tr><td><b>Gender:</b> " & gITEXTDiv("i_1") & "</td></tr>"
+        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_91") &" :</b>  ________ </td></tr>"
+        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_87") &":</b> " & gITEXTDiv("i_1") & "</td></tr>"
         f.WriteLine "<tr><td><b>Gender Identity:</b> " & gITEXTDiv("i_23") & "</td></tr>"
         f.WriteLine "<tr><td><b>Race/Ethnicity:</b> " & gITEXTDiv("i_text1") & "</td></tr>"
-        f.WriteLine "<tr><td><b>Disability:</b> " & gITEXTDiv("i_16") & "</td></tr>"
-        f.WriteLine "<tr><td><b>Accommodation:</b> " & gITEXTDiv("i_19") & "</td></tr>"
-        f.WriteLine "<tr><td><b>Key Populations:</b> " & gITEXTDiv("i_27") & "</td></tr>"
+        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_text3") &":</b> " & gITEXTDiv("i_16") & "</td></tr>"
+        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_83") &":</b> " & gITEXTDiv("i_83") & "</td></tr>"
+        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_84") &":</b> " & gITEXTDiv("i_27") & "</td></tr>"
 
         ' Move to the next record
         gITEXTDiv.MoveNext
@@ -5672,6 +5697,18 @@ If InStr(pv_parts, "Div,") Then
 
     ' Write the table end tag
     f.WriteLine "</table>"
+
+
+
+
+    End If
+End If
+
+
+
+	'fetch from misc table end
+
+
 End If
 
 

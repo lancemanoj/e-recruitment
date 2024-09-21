@@ -186,7 +186,7 @@ End Function
 
     ' Print the query for debugging
     Response.Write("SQL Query: " & fullQuery)
-  
+   'Response.End
 
     ' Execute the update query
     Set dbCmd = Server.CreateObject("ADODB.Command")
