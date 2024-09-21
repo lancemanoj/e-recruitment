@@ -427,7 +427,7 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
     <!-- Text Area Row -->
     <tr>
         <td>
-            <label for="keyPopulationsExplanation">You may want to explain whether and how you identify as part of key populations. 
+            <label for="keyPopulationsExplanation"> <% response.write gITEXT("i_97")%>
 </label>
             <textarea id="cand_div_keyPopulationsExplanation" name="cand_div_keyPopulationsExplanation" rows="4" cols="50">
                 <%=Server.HTMLEncode(JAPINFO3("cand_div_keyPopulationsExplanation") & "")%>

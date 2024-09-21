@@ -5683,39 +5683,80 @@ If InStr(pv_parts, "Div,") Then
         ' Loop through the records and construct the table rows with regex applied to all fields
         Do While Not gITEXTDiv.EOF
             ' Write canddiv_pronoun_id with numbers and hyphens removed
-            If Trim(regex.Replace(GETDIV("canddiv_pronoun_id"), "")) <> "" Then
-                f.WriteLine "<tr><td><b>" & gITEXTDiv("i_91") & " :</b> " & regex.Replace(GETDIV("canddiv_pronoun_id"), "") & " </td></tr>"
+            
+	        f.WriteLine "<tr><td><b>" & gITEXTDiv("i_91") & " :</b> "
+	        
+
+	         	If GETDIV("canddiv_pronoun_id") = "0" Then
+	 f.WriteLine  GETDIV("cand_other_pronoun") & " </td></tr>"
+	End If
+	   
+	        If Trim(regex.Replace(GETDIV("canddiv_pronoun_id"), "")) <> "" Then
+	          f.WriteLine  regex.Replace(GETDIV("canddiv_pronoun_id"), "") & " </td></tr>"
             End If
 
             ' Write cand_gnd_i with numbers and hyphens removed
-            If Trim(regex.Replace(GETDIV("cand_gnd_i"), "")) <> "" Then
-                f.WriteLine "<tr><td><b>" & gITEXTDiv("i_87") & ":</b> " & regex.Replace(GETDIV("cand_gnd_i"), "") & " </td></tr>"
-            End If
+	        f.WriteLine "<tr><td><b>" & gITEXTDiv("i_87") & ":</b> "
+        
+            
+	         	If GETDIV("cand_gnd_i") = "0" Then
+	 f.WriteLine  GETDIV("cand_other_gender") & " </td></tr>"
+	End If
+	   
 
-            ' Write cand_div_genderidentity with numbers and hyphens removed
-            If Trim(regex.Replace(GETDIV("cand_div_genderidentity"), "")) <> "" Then
-                f.WriteLine "<tr><td><b>Gender Identity:</b> " & regex.Replace(GETDIV("cand_div_genderidentity"), "") & " </td></tr>"
+            If Trim(regex.Replace(GETDIV("cand_gnd_i"), "")) <> "" Then
+                f.WriteLine  regex.Replace(GETDIV("cand_gnd_i"), "") & " </td></tr>"
             End If
+				' Write cand_div_genderidentity with numbers and hyphens removed
+			f.WriteLine "<tr><td><b>Gender Identity:</b> "
+
+            	If GETDIV("cand_div_genderidentity") = "-1" Then
+	 f.WriteLine  GETDIV("cand_div_other_genderidentity") & " </td></tr>"
+	End If
+	             
+
+			If Trim(regex.Replace(GETDIV("cand_div_genderidentity"), "")) <> "" Then
+				f.WriteLine regex.Replace(GETDIV("cand_div_genderidentity"), "") & " </td></tr>"
+			End If
 
             ' Write cand_div_race_ethnicity with numbers and hyphens removed
-            If Trim(regex.Replace(GETDIV("cand_div_race_ethnicity"), "")) <> "" Then
-                f.WriteLine "<tr><td><b>Race/Ethnicity:</b> " & regex.Replace(GETDIV("cand_div_race_ethnicity"), "") & " </td></tr>"
-            End If
+			f.WriteLine "<tr><td><b>Race/Ethnicity:</b> "        
+			If Trim(regex.Replace(GETDIV("cand_div_race_ethnicity"), "")) <> "" Then
+    f.WriteLine regex.Replace(GETDIV("cand_div_race_ethnicity"), "")
+    f.WriteLine regex.Replace(GETDIV("cand_div_other_raceethnicity"), "") & " </td></tr>"
+End If
 
             ' Write cand_div_disability with numbers and hyphens removed
-            If Trim(regex.Replace(GETDIV("cand_div_disability"), "")) <> "" Then
-                f.WriteLine "<tr><td><b>" & gITEXTDiv("i_text3") & ":</b> " & regex.Replace(GETDIV("cand_div_disability"), "") & "</td></tr>"
-            End If
+	        f.WriteLine "<tr><td><b>" & gITEXTDiv("i_text3") & ":</b> " 
+			  If GETDIV("cand_div_disability") = "0" Then
+				f.WriteLine gITEXTDiv("i_text4")	 & "</td></tr>"
+				End If
+			If GETDIV("cand_div_disability") = "1" Then
+			f.WriteLine gITEXTDiv("i_text5")	 & "</td></tr>"
+			End If
+               
+            If GETDIV("cand_div_disability") = "0" Then
 
-            ' Write cand_div_disability_accommodation with numbers and hyphens removed
-            If Trim(regex.Replace(GETDIV("cand_div_disability_accommodation"), "")) <> "" Then
-                f.WriteLine "<tr><td><b>" & gITEXTDiv("i_83") & ":</b> " & regex.Replace(GETDIV("cand_div_disability_accommodation"), "") & "</td></tr>"
-            End If
+	         f.WriteLine "<tr><td><b>" & gITEXTDiv("i_83") & ":</b> "
+			 If GETDIV("cand_div_disability_accommodation") = "0" Then
+					f.WriteLine gITEXTDiv("i_text4")	 & "</td></tr>"
+			  End If
+	       If GETDIV("cand_div_disability_accommodation") = "1" Then
+		f.WriteLine gITEXTDiv("i_text5")	 & "</td></tr>"
+  End If
 
+	        End If
+           
+	     If GETDIV("cand_div_disability") = "0" Then
+	          If GETDIV("cand_div_disability_accommodation") = "0" Then
             ' Write cand_div_disability_accom with numbers and hyphens removed
             If Trim(regex.Replace(GETDIV("cand_div_disability_accom"), "")) <> "" Then
                 f.WriteLine "<tr><td><b>" & gITEXTDiv("i_84") & ":</b> " & regex.Replace(GETDIV("cand_div_disability_accom"), "") & "</td></tr>"
             End If
+	  End If
+	  End If
+
+	   f.WriteLine "<tr><td><b>" & gITEXTDiv("i_97") & " :</b> " & regex.Replace(GETDIV("cand_div_keyPopulationsExplanation"), "") & " </td></tr>"
 
             ' Move to the next record
             gITEXTDiv.MoveNext
