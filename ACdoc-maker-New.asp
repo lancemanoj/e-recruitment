@@ -5659,46 +5659,73 @@ If InStr(pv_parts, "Div,") Then
 	' query to get value from misc table
 	' Declare variables if not already declared
 Dim GETDIVsql, GETDIV
+Dim regex
 
-' Check if "RC," is present in pv_parts
+' Check if "Div," is present in pv_parts
 If InStr(pv_parts, "Div,") Then
     ' Update the SQL query and variable names
-    GETDIVsql = "SELECT cand_div_keyPopulationsExplanation,cand_div_disability_accom, cand_div_other_raceethnicity, cand_div_other_genderidentity,cand_div_genderidentity, cand_other_gender,cand_gnd_i,cand_other_pronoun,canddiv_pronoun_id,cand_div_race_ethnicity,cand_div_disability,cand_div_disability_accommodation, cand_div_key_population FROM tx_rsys_candmisc WHERE cand_id_c = " & applicant_id
-    
+    GETDIVsql = "SELECT cand_div_keyPopulationsExplanation, cand_div_disability_accom, cand_div_other_raceethnicity, cand_div_other_genderidentity, cand_div_genderidentity, cand_other_gender, cand_gnd_i, cand_other_pronoun, canddiv_pronoun_id, cand_div_race_ethnicity, cand_div_disability, cand_div_disability_accommodation, cand_div_key_population FROM tx_rsys_candmisc WHERE cand_id_c = " & applicant_id
+
     ' Initialize the recordset and set timeout
     Set GETDIV = Server.CreateObject("ADODB.RecordSet")
     rsys_db_select.CommandTimeout = 320
-    
+
     ' Open the recordset with the query
     GETDIV.Open GETDIVsql, rsys_db_select, 1, 1
-    
+
     ' Check if there are any records returned
     If Not GETDIV.EOF Then
-        ' Check if 'candmisc_maxteam_c' is 0, then write "0"
-      
-        
-	    
-	   
-    ' Loop through the records and construct the table rows with one field each
-    Do While Not gITEXTDiv.EOF
-        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_91") &" :</b>  " & GETDIV("canddiv_pronoun_id") & " </td></tr>"
-        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_87") &":</b>  " & GETDIV("cand_gnd_i") & " </td></tr>"
-        f.WriteLine "<tr><td><b>Gender Identity:</b>  " & GETDIV("cand_div_genderidentity") & " </td></tr>"
-        f.WriteLine "<tr><td><b>Race/Ethnicity:</b> " & GETDIV("cand_div_race_ethnicity") & " </td></tr>"
-        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_text3") &":</b> " & GETDIV("cand_div_disability") & "</td></tr>"
-        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_83") &":</b> " & GETDIV("cand_div_disability_accommodation") & "</td></tr>"
-        f.WriteLine "<tr><td><b>"& gITEXTDiv("i_84") &":</b> " & GETDIV("cand_div_disability_accom") & "</td></tr>"
+        ' Create a regular expression object to match numbers and hyphens
+        Set regex = New RegExp
+        regex.Pattern = "[-0-9]"  ' This pattern will match numbers and hyphens
+        regex.Global = True
 
-        ' Move to the next record
-        gITEXTDiv.MoveNext
-    Loop
+        ' Loop through the records and construct the table rows with regex applied to all fields
+        Do While Not gITEXTDiv.EOF
+            ' Write canddiv_pronoun_id with numbers and hyphens removed
+            If Trim(regex.Replace(GETDIV("canddiv_pronoun_id"), "")) <> "" Then
+                f.WriteLine "<tr><td><b>" & gITEXTDiv("i_91") & " :</b> " & regex.Replace(GETDIV("canddiv_pronoun_id"), "") & " </td></tr>"
+            End If
 
-    ' Write the table end tag
-    f.WriteLine "</table>"
+            ' Write cand_gnd_i with numbers and hyphens removed
+            If Trim(regex.Replace(GETDIV("cand_gnd_i"), "")) <> "" Then
+                f.WriteLine "<tr><td><b>" & gITEXTDiv("i_87") & ":</b> " & regex.Replace(GETDIV("cand_gnd_i"), "") & " </td></tr>"
+            End If
 
+            ' Write cand_div_genderidentity with numbers and hyphens removed
+            If Trim(regex.Replace(GETDIV("cand_div_genderidentity"), "")) <> "" Then
+                f.WriteLine "<tr><td><b>Gender Identity:</b> " & regex.Replace(GETDIV("cand_div_genderidentity"), "") & " </td></tr>"
+            End If
 
+            ' Write cand_div_race_ethnicity with numbers and hyphens removed
+            If Trim(regex.Replace(GETDIV("cand_div_race_ethnicity"), "")) <> "" Then
+                f.WriteLine "<tr><td><b>Race/Ethnicity:</b> " & regex.Replace(GETDIV("cand_div_race_ethnicity"), "") & " </td></tr>"
+            End If
 
+            ' Write cand_div_disability with numbers and hyphens removed
+            If Trim(regex.Replace(GETDIV("cand_div_disability"), "")) <> "" Then
+                f.WriteLine "<tr><td><b>" & gITEXTDiv("i_text3") & ":</b> " & regex.Replace(GETDIV("cand_div_disability"), "") & "</td></tr>"
+            End If
 
+            ' Write cand_div_disability_accommodation with numbers and hyphens removed
+            If Trim(regex.Replace(GETDIV("cand_div_disability_accommodation"), "")) <> "" Then
+                f.WriteLine "<tr><td><b>" & gITEXTDiv("i_83") & ":</b> " & regex.Replace(GETDIV("cand_div_disability_accommodation"), "") & "</td></tr>"
+            End If
+
+            ' Write cand_div_disability_accom with numbers and hyphens removed
+            If Trim(regex.Replace(GETDIV("cand_div_disability_accom"), "")) <> "" Then
+                f.WriteLine "<tr><td><b>" & gITEXTDiv("i_84") & ":</b> " & regex.Replace(GETDIV("cand_div_disability_accom"), "") & "</td></tr>"
+            End If
+
+            ' Move to the next record
+            gITEXTDiv.MoveNext
+        Loop
+
+        ' Write the table end tag
+        f.WriteLine "</table>"
+
+        ' Clean up the regex object
+        Set regex = Nothing
     End If
 End If
 
