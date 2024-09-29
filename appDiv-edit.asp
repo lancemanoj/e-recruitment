@@ -51,8 +51,8 @@ pv_heavybottom = "1"
 dim JAPYsql, JAPY
 dim JAPINFO2sql, JAPINFO2
 dim JAPINFO3sql,JAPINFO3
-DIM UPDDsql, UPDD, goeditsql, goedit, logeditsql, logedit
-Dim Dcount, faqid
+DIM UPDDsql, UPDD, goeditsql, goedit, logeditsql, logedit, goeditDiv
+Dim Divcount, faqid
 '<<--Added by Interface on 05/02/2007
 dim obj_db_CmdI, obj_db_CmdII, obj_logs_CmdI,obj_db_select_CmdI,obj_db_select_Cmd3
 '-->>
@@ -85,13 +85,9 @@ pv_candidD = session("RSYS_EVAL")
 '******************************
 ' BEGIN Div EDIT
 '******************************
-If Request.form("GOeditDiv") = "99" then
-
-
-else
-
-	
-End If
+'If Request.form("GOeditDiv") = "99" then
+'else	
+'End If
 
 
 ' Form Submission Logic
@@ -99,7 +95,11 @@ Dim action
 action = Request.Form("action")
 
 
-If action = "Save" Then
+'28 SEP 24 LJL revised save command to GOeditDiv
+'If action = "Save" Then
+
+'28 SEP 24 LJL revised save command to GOeditDiv
+If Request.form("GOeditDiv") = "99" then
     ' Ensure race_ethnicity is treated as an array
     Dim race_ethnicity_value
     If IsArray(Request.Form("cand_div_race_ethnicity")) Then
@@ -117,7 +117,7 @@ If action = "Save" Then
 
 ElseIf action = gITEXT("i_13") Then
     ' Handle the comment action and redirect
-    Response.Redirect "appD-edit.asp"
+    Response.Redirect "appDiv-edit.asp"
 End If
 
 '******************************
@@ -141,7 +141,7 @@ End If
 set obj_db_select_Cmd = server.CreateObject("adodb.command")
 obj_db_select_Cmd.ActiveConnection = rsys_db_select
 
-JAPYsql = "SELECT cand_gnd_i, upd_d, cand_lnam_t, cand_fnam_t, cand_comp_os_i, cand_comp_os_other_t, cand_wp_i, cand_wp_other_t, cand_sps_i, cand_sps_other_t, cand_db_i, cand_db_other_t, cand_pres_i, cand_pres_other_t, cand_web_i, cand_web_other_t, cand_prgming_i, cand_prgming_other_t, cand_pc_other_t, cand_pc_skills_t,cand_div_pronouns, cand_div_gender_doc, cand_div_gender_identity, cand_div_race_ethnicity, cand_div_disability, cand_div_accommodation, cand_div_key_population FROM td_rsys_cand 	WHERE cand_id_c = ?"
+JAPYsql = "SELECT cand_gnd_i, upd_d, cand_lnam_t, cand_fnam_t, cand_comp_os_i, cand_comp_os_other_t, cand_pc_other_t, cand_pc_skills_t,cand_div_pronouns, cand_div_gender_doc, cand_div_gender_identity, cand_div_race_ethnicity, cand_div_disability, cand_div_accommodation, cand_div_key_population FROM td_rsys_cand 	WHERE cand_id_c = ?"
 obj_db_select_Cmd.CommandText = JAPYsql
 Set JAPY = obj_db_select_Cmd.Execute(,Array(pv_candidD)) 
 
@@ -149,7 +149,7 @@ Set JAPY = obj_db_select_Cmd.Execute(,Array(pv_candidD))
 set obj_db_select_CmdI = server.CreateObject("adodb.command")
 obj_db_select_CmdI.ActiveConnection = rsys_db_select
 '----
-JAPINFO2sql = "SELECT editD FROM tx_rsys_candedit WHERE cand_id_c = ? "
+JAPINFO2sql = "SELECT editDiv FROM tx_rsys_candedit WHERE cand_id_c = ? "
 obj_db_select_CmdI.CommandText = JAPINFO2sql
 Set JAPINFO2 = obj_db_select_CmdI.Execute(,Array(pv_candidD)) 
 
@@ -280,48 +280,22 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
    
 <form class="appForms" action="appDiv-edit.asp" method="POST" >
 
-
-
-    <TABLE cellpadding="0" border="0" width="100%">
-        <%' REMOVED Do while JAPINFO.eof = false%>
-          		<tr>
-            			<td valign='top' colspan="2"><%=gITEXT("i_4")%></td>
-          		</TR>
-          		<tr>
-            			<td valign='top' colspan="2">&nbsp;</td>
-          		</TR>
-          		<tr>
-            			<td valign='top' colspan="2"><%=gITEXT("i_23")%></td>
-          		</TR>
-          		<tr>
-            			<td valign='top' colspan="2">&nbsp;</td>
-          		</TR>
-          		<tr>
-            			<td valign='top'><%=gITEXT("i_text1")%></td>
-          		</TR>
-          		<tr>
-            			<td valign='top' colspan="2">&nbsp;</td>
-          		</TR>
-          		<tr>
-            			<td valign='top'><%=gITEXT("i_27")%></td>
-          		</TR>
-          		<tr>
-            			<td valign='top'>&nbsp;</td>
+   <TABLE cellpadding="0" border="0" width="100%">
+           		<tr>
+            			<td valign='top'>The UNAIDS Secretariat is committed to creating a more diverse workforce and fostering an inclusive work environment. Leadership by and greater involvement of communities living with and affected by HIV is essential to ending AIDS. To duly consider applications from candidates belonging to these communities, we are asking for below information about your identity.
+<br><br>
+Protecting your personal data is of the utmost importance to UNAIDS and we take this responsibility very seriously. Any information you share with us as part of your application is securely stored on our computerised database in a way that it is accessible only to authorized personnel. We collect this information to ensure that your application is given due consideration, that we can address you in the way you consider appropriate, and also so that you receive the accommodation you require to participate in the selection process, as necessary. There are no negative consequences if you prefer not to answer one or more of the optional questions.</td>
           		</TR>
 </table>
 
           		
-<table cellpadding="0" border="0" width="100%">
-          		<TR>
-            			<td valign='top' valign='top' colspan='3' class="textbold"><%=gITEXT("i_22")%></td>
-          		</tr>
+<table cellpadding="0" border="2" width="100%">
     	<!-- Personal Pronouns -->
           		<tr>
-           	<td><% response.write gITEXT("i_91")%> </td>
-
-           	<td valign='top'>
+		  			<td valign='top'><% response.write gITEXT("i_91")%> </td>
+		  			<td valign='top'>
            <select name="canddiv_pronoun_id" onchange="toggleOther('otherpronounTextbox', 'canddiv_pronoun_id');">
-    <option value="select">select</option>
+    <option value="select"> Select</option>
     <option value="<%= gITEXT("i_92") %>" <% If JAPINFO3("canddiv_pronoun_id") = gITEXT("i_92") Then Response.Write("selected") %>><%= gITEXT("i_92") %></option>
     <option value="<%= gITEXT("i_93") %>" <% If JAPINFO3("canddiv_pronoun_id") = gITEXT("i_93") Then Response.Write("selected") %>><%= gITEXT("i_93") %></option>
     <option value="<%= gITEXT("i_94") %>" <% If JAPINFO3("canddiv_pronoun_id") = gITEXT("i_94") Then Response.Write("selected") %>><%= gITEXT("i_94") %></option>
@@ -329,28 +303,23 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
 </select>
 
                          <span id="otherpronounTextbox" style="display:none;">
-   
     
         <input type="text" placeholder="specify other" name="cand_other_pronoun"  value="<% =JAPINFO3("cand_other_pronoun") %>" />
         </span>
-   
-
-           	</td>
+              	</td>
         </tr>
       
 
-          		
-          <TR>
-    <td><% response.write gITEXT("i_87")%><FONT SIZE='4' COLOR='Red'>*</FONT> </td>
-    <td>
-     
-         
-                    <select name="cand_gnd_i" onchange="toggleOther('otherGenderTextbox','cand_gnd_i');">
+ <!-- Gender --->
+         		
+<TR>
+    <td valign='top'><% response.write gITEXT("i_87")%><FONT SIZE='4' COLOR='Red'>*</FONT> </td>
+    <td valign='top'>
+                   <select name="cand_gnd_i" onchange="toggleOther('otherGenderTextbox','cand_gnd_i');">
                         <OPTION value="<%= gITEXT("i_88") %>" <% If JAPINFO3("cand_gnd_i") =gITEXT("i_88") then%> SELECTED<% End If%>><% response.write gITEXT("i_88")%></OPTION>
                         <OPTION value="<%= gITEXT("i_89") %>" <% If JAPINFO3("cand_gnd_i") = gITEXT("i_89") then%> SELECTED<% End If%>><% response.write gITEXT("i_89")%></OPTION>
                         <OPTION value="0" <% If JAPINFO3("cand_gnd_i") = "0" then%> SELECTED<% End If%>><% response.write gITEXT("i_76")%></OPTION>
                     </select>
-               
                      <span id="otherGenderTextbox" style="display:none;">
                     <input type="text"  placeholder="specify other" name="cand_other_gender" value="<% =JAPINFO3("cand_other_gender") %>">
                 </span>
@@ -358,19 +327,17 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
     </td>
                <!-- The "Other" textbox, initially hidden, placed in the same row -->
 
+<!-- Gender Identitiies ---->
+
 <%
     Dim jsonText
     jsonText = gITEXT("i_text7") ' Fetch the JSON string from your function
     ' Call the function to generate the dropdown
-    GenerateDropdown jsonText, "cand_div_genderidentity", JAPINFO3("cand_div_genderidentity"),"OtherIdentityTextbox",JAPINFO3("cand_div_other_genderidentity")
-    %>
+    GenerateDropdown jsonText, "cand_div_genderidentity", JAPINFO3("cand_div_genderidentity"),"OtherIdentityTextbox",JAPINFO3("cand_div_other_genderidentity")%>
 
           		
-<!-- Race/Ethnicity -->
+<!---- Race/Ethnicity ---->
 <tr>
-    
-
-   
       <%
                 ' Fetch the JSON data for the race/ethnicity checkboxes
                 Dim jsonTextRaceEthnicity
@@ -382,121 +349,74 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
     </td>
 </tr>
       
-          		<!-- Disability Inclusion -->
-          	    <tr>
-       	<td><% response.write gITEXT("i_text3")%> </td>
-
+      
+<!-- Disability Inclusion -->
+<tr>
+       	<td  valign='top'><% response.write gITEXT("i_text3")%></td>
        	<td valign='top'>
      <select name="cand_div_disability" class="wide" onchange="toggleOther('otherdisabilityTextbox','cand_div_disability')" >
-      
-         <option value ="select"> select</option>
-    
+         <option value ="select"> Select</option>
             <option value="0" <% If JAPINFO3("cand_div_disability") = "0" Then Response.Write("selected") %>><% response.write gITEXT("i_text4")%></OPTION>
-            <option value="1" <% If JAPINFO3("cand_div_disability") = "1" Then Response.Write("selected") %>><% response.write gITEXT("i_text5")%></OPTION>
-           
-     </select>
-
-           
-
+            <option value="1" <% If JAPINFO3("cand_div_disability") = "1" Then Response.Write("selected") %>><% response.write gITEXT("i_text5")%></OPTION></select>
        	</td>
  </tr>
 
 
-             		<!-- Disability acoomodation -->
-         	    <tr id="otherdisabilityTextbox" style="display:none" >
-      	<td><% response.write gITEXT("i_83")%> </td>
+<!-- Disability acoomodation -->
+<tr id="otherdisabilityTextbox" style="display:none" >
+      	<td  valign='top'><% response.write gITEXT("i_83")%>///</td>
 
-      	<td valign='top'>
-    <select class="wide" name="cand_div_disability_accommodation"  onchange="toggleOther('otherdisabilityaccomTextbox','cand_div_disability_accommodation')"; >
-     
-        <option value ="select"> select</option>
-   
+      	<td valign='top'><select class="wide" name="cand_div_disability_accommodation"  onchange="toggleOther('otherdisabilityaccomTextbox','cand_div_disability_accommodation')"; >
+        <option value ="select"> Select</option>
            <option value="1" <% If JAPINFO3("cand_div_disability_accommodation") = "1" Then Response.Write("selected") %>><% response.write gITEXT("i_text5")%></OPTION>
            <option value="0" <% If JAPINFO3("cand_div_disability_accommodation") = "0" Then Response.Write("selected") %>><% response.write gITEXT("i_text4")%></OPTION>
-          
-    </select>
-
-          
-
-      	</td>
-</tr>
-    <tr id="otherdisabilityaccomTextbox" style="display:none">
-    <td><% response.write gITEXT("i_84")%></td>
-    <td valign='top'>
-        <textarea class="wide" placeholder="Specify reasonable accommodation" name="cand_div_disability_accom" rows="4" cols="50">
-            <% =JAPINFO3("cand_div_disability_accom") %>
-        </textarea>
-    </td>
+    </select></td>
 </tr>
 
 
+<tr id="otherdisabilityaccomTextbox" style="display:none">
+    <td  valign='top'><% response.write gITEXT("i_84")%></td>
+    <td valign='top'><textarea class="wide" placeholder="Specify reasonable accommodation" name="cand_div_disability_accom" rows="3" cols="50"><% =JAPINFO3("cand_div_disability_accom") %></textarea></td>
+</tr>
 
 
-
-
-    
-    <!-- Text Area Row -->
+<!-- Text Area Row -->
+<!-- Key Populations real ---->
+<tr id="detailsRow">
+    <td  valign='top' colspan=2><%=response.write(gITEXT("i_99") & "")%></td>
+</tr>
     <tr>
-        <td>
-            <label for="keyPopulationsExplanation"> <% response.write gITEXT("i_97")%>
-</label>
-            <textarea id="cand_div_keyPopulationsExplanation" name="cand_div_keyPopulationsExplanation" rows="4" cols="50">
-                <%=Server.HTMLEncode(JAPINFO3("cand_div_keyPopulationsExplanation") & "")%>
- 
-</textarea>
-        </td>
+        <td  valign='top' colspan=2><label for="keyPopulationsExplanation"><% response.write gITEXT("i_97")%></label><textarea id="cand_div_keyPopulationsExplanation" name="cand_div_keyPopulationsExplanation" rows="3" cols="50"><%=Server.HTMLEncode(JAPINFO3("cand_div_keyPopulationsExplanation") & "")%></textarea></td>
     </tr>
     
-          		<!-- Key Populations -->
-          	<tr>
-        <td>
-            <button type="button" onclick="toggleDetails()">Hide Details</button>
-        </td>
-    </tr>
-    <!-- Paragraph Row (Hidden by Default) -->
-<tr id="detailsRow" style="display:block;">
-    <td>
-        <%=response.write(gITEXT("i_99") & "")%>
-    </td>
+<!-- Key Populations OLD
+<tr>
+        <td  valign='top' colspan=2><button type="button" onclick="toggleDetails()">Hide Details</button></td>
 </tr>
+ ---->
 
-
-    	<TR>
-            			<td valign='top'><textarea  wrap="soft" ROWS="6" NAME="cand_pc_skills_t" COLS="50"><%=Server.HTMLEncode(JAPY("cand_pc_skills_t") & "")%></TEXTAREA></td>
-          		</TR>
-          		<TR>
-            			<td valign='top' valign='top' colspan='3' class="textbold"><%=gITEXT("i_21")%></td>
-          		</tr>
-          		<TR>
-            			<td valign='top'><textarea  wrap="soft" ROWS="6" NAME="cand_pc_other_t" COLS="50"><%=Server.HTMLEncode(JAPY("cand_pc_other_t") & "")%></TEXTAREA></td>
-          		</TR>
-          		<TR>
-            			<td valign='top' valign='top' colspan='3' class="textbold">&nbsp;</td>
-          		</tr>
+    <!-- Paragraph Row (Hidden by Default) 
+<tr id="detailsRow" style="display:block;">
+ -->
 
           <%
-          Dcount = int(japinfo2("EditD") + 1)
+          Divcount = int(japinfo2("EditDiv") + 1)
           'JAPINFO.movenext
           'loop%>
-          <tr valign="bottom">
 
-             
-
-            	<td  colspan="2" valign="bottom" align='center'>
-              			<INPUT TYPE="hidden" NAME="cand_id_c" VALUE="<%=pv_candidD%>">
-				<INPUT TYPE="hidden" NAME="editD" VALUE="<% response.write Dcount%>">
-				<INPUT TYPE="hidden" NAME="GOeditD" VALUE="99">
-                               <input type="submit" name="action" value="Save">
-                <input type="submit" name="action" value="<%= gITEXT("i_13") %>">
-				
-                	</td>
-              </tr>
 <tr valign="bottom">
-	<td valign="bottom">&nbsp;</td>
+      <td  colspan="2" valign="bottom" align='center' nowrap>
+          <INPUT TYPE="hidden" NAME="cand_id_c" VALUE="<%=pv_candidD%>">
+		  <INPUT TYPE="hidden" NAME="editDiv" VALUE="<% response.write Divcount%>">
+		  <INPUT TYPE="hidden" NAME="GOeditDiv" VALUE="99">
+           <INPUT  TYPE="submit" class="submit" name="action" value="<%= gITEXT("i_13") %>"></td>
+</tr>
+<tr valign="bottom">
+	<td valign="bottom" colspan=2>&nbsp;</td>
 </tr>
 </TABLE>
 </form>
-<%pv_last_update="22 Aug 24"
+<%pv_last_update="28 Sep 24"
 '<<--Added by Interface on 05/02/2007
 'set obj_int_select_Cmd = nothing
 'set obj_db_CmdII = nothing
