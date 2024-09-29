@@ -201,8 +201,16 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
           } else {
               otherTextbox.style.display = "none";
           }
-      }
+          
+          if (field == "cand_div_disability") {
+              var disabilitySelect = document.getElementsByName('cand_div_disability')[0];
+              if (disabilitySelect.value === "1") {
+                  document.getElementById('otherdisabilityaccomTextbox').style.display = 'none';
+              }
+          }
 
+      }
+   
       function toggleOtherTextbox() {
           var checkboxes = document.getElementsByName('cand_div_race_ethnicity');
           var otherTextbox = document.getElementById('OtherraceethnicityTextbox');
@@ -236,10 +244,11 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
             
 
             var disabilitySelect = document.getElementsByName('cand_div_disability')[0];
+
             if (disabilitySelect.value === "0") {
                 document.getElementById('otherdisabilityTextbox').style.display = 'table-row';
             }
-
+            
             // Check for cand_div_disability_accommodation on page load
             var disabilityAccomSelect = document.getElementsByName('cand_div_disability_accommodation')[0];
             if (disabilityAccomSelect.value === "0") {
@@ -247,7 +256,9 @@ obj_db_select_Cmd3.CommandText = JAPINFO3sql
             } else {
                 document.getElementById('otherdisabilityaccomTextbox').style.display = 'none';
             }
-
+            if (disabilitySelect.value === "1") {
+                document.getElementById('otherdisabilityaccomTextbox').style.display = 'none';
+            }
          //    Define an array of dropdown IDs and their corresponding textbox IDs
             var fields = [
                 { dropdownId: 'canddiv_pronoun_id', textboxId: 'otherpronounTextbox' },

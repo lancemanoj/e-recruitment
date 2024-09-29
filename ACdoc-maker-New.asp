@@ -5723,7 +5723,11 @@ If InStr(pv_parts, "Div,") Then
 			f.WriteLine "<tr><td><b>Race/Ethnicity:</b> "        
 			If Trim(regex.Replace(GETDIV("cand_div_race_ethnicity"), "")) <> "" Then
     f.WriteLine regex.Replace(GETDIV("cand_div_race_ethnicity"), "")
-    f.WriteLine regex.Replace(GETDIV("cand_div_other_raceethnicity"), "") & " </td></tr>"
+       
+ If InStr(GETDIV("cand_div_race_ethnicity"), "-1") > 0 Then
+     f.WriteLine regex.Replace(GETDIV("cand_div_other_raceethnicity"), "")
+     End If
+    f.WriteLine " </td></tr>"
 End If
 
             ' Write cand_div_disability with numbers and hyphens removed
