@@ -350,43 +350,43 @@ end if%>
 
 <!--manoj added div for number header -->
 <div class="row tile_count">
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <div class="col-md-2 col-sm-1 col-xs-6 tile_stats_count">
               <span class="count_top"><i class="fa fa-user"></i> Applicants</span>
               <div class="count"><%= GETheader("totalapplicant") %></div>
               <span class="count_bottom"><i class="green"> </i> </span>
             </div>
          
-     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <div class="col-md-2 col-sm-1 col-xs-6 tile_stats_count">
               <span class="count_top"><i class="fa fa-user"></i> Females</span>
               <div class="count red"><%= GETheader("female") %></div>
               <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i> </i> </span>
             </div>
 
-       <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"><i class="fa fa-user"></i> Males</span>
-              <div class="count blue"><%= GETheader("Male") %></div>
-              <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i> </span>
+            <div class="col-md-2 col-sm-1 col-xs-6 tile_stats_count">
+                <span class="count_top"><i class="fa fa-user"></i> Males</span>
+                <div class="count blue"><%= GETheader("Male") %></div>
+                <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i> </span>
             </div>
 
-     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <div class="col-md-2 col-sm-1 col-xs-6 tile_stats_count">
               <span class="count_top"><i class="fa fa-user"></i> Screened</span>
-              <div class="count"><%= GETheader("screened") %></div>
+              <div class="count orange"><%= GETheader("screened") %></div>
               <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i></span>
             </div>
 
-          <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <div class="col-md-2 col-sm-1 col-xs-6 tile_stats_count">
               <span class="count_top"><i class="fa fa-clock-o"></i> Interviewed </span>
-              <div class="count"><%= GETheader("interv") %></div>
+              <div class="count brown"><%= GETheader("interv") %></div>
               <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i> </i> </span>
             </div>
            
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <div class="col-md-2 col-sm-1 col-xs-6 tile_stats_count">
               <span class="count_top"><i class="fa fa-user"></i> Shortlisted</span>
               <div class="count purple"><%= GETheader("shortlist") %></div>
               <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i> </i> </span>
             </div>
 
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <div class="col-md-2 col-sm-1 col-xs-6 tile_stats_count">
               <span class="count_top"><i class="fa fa-clock-o"></i> Selected </span>
               <div class="count green"><%= GETheader("Selected") %></div>
               <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i> </i> </span>
