@@ -273,7 +273,7 @@ end if
 
 ' manoj dim GETheadersql, GETheader, pv_totalapplicant, pv_totalinterview, pv_male, pv_female, pv_screen,pv_shortlisted
 
-	GETheadersql = "select count(candjob_id_c) as totalapplicant,count(shortlist) as shortlist,count(interv) as interv,count(screened) as screened,count(selected) as selected,COUNT(CASE WHEN sexc = 'M' then 1 ELSE NULL END) as Male,COUNT(CASE WHEN sexc = 'F' then 1 ELSE NULL END) as female" 
+	GETheadersql = "select count(candjob_id_c) as totalapplicant,count(shortlist) as shortlist,count(interv) as interv,count(screened) as screened,count(selected) as selected,COUNT(CASE WHEN sexc = 'M' then 1 ELSE NULL END) as Male,COUNT(CASE WHEN sexc = 'F' then 1 ELSE NULL END) as female,COUNT(CASE WHEN sexc = 'O' then 1 ELSE NULL END) as other" 
     GETheadersql= GETheadersql &" from(SELECT DISTINCT candjob_id_c, case candjob_shortlist_i when 1 then count(candjob_shortlist_i) end as shortlist, case candjob_interv_i when 1 then count(candjob_interv_i)   end as interv, case candjob_screened_i when 1 then count(candjob_screened_i) end as screened , case candjob_selected_i when 1 then count(candjob_selected_i) end as selected ,sexc   FROM v_rsys_jobs_sub_view_" & session("template_org_code") & "  WHERE jobinfo_uid_c = " & newjobid & " group by candjob_shortlist_i,candjob_id_c,candjob_interv_i,candjob_screened_i,candjob_selected_i,sexc   )     a"
 	set GETheader = rsys_db_select.execute(GETheadersql)
   
@@ -365,6 +365,12 @@ end if%>
             <div class="col-md-2 col-sm-1 col-xs-6 tile_stats_count">
                 <span class="count_top"><i class="fa fa-user"></i> Males</span>
                 <div class="count blue"><%= GETheader("Male") %></div>
+                <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i> </span>
+            </div>
+
+			<div class="col-md-2 col-sm-1 col-xs-6 tile_stats_count">
+                <span class="count_top"><i class="fa fa-user"></i> Other</span>
+                <div class="count"><%= GETheader("other") %></div>
                 <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i></i> </span>
             </div>
 
