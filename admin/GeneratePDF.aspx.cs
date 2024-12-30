@@ -8,6 +8,7 @@
 				//08 OCT 24 LJL added separate VN Title and VN number to show on sep lines in the PDF front page
 				// 09 OCT 24 LJL added diversity to see if it works
 				// ' 20 OCT 24 LJL modified addDots for each TOC item - two pages 
+//30 dec 24 manoj added code to check issue logo not appear in demo
 				
 using System;
 using System.Collections.Generic;
@@ -283,7 +284,7 @@ public partial class GeneratePDF : System.Web.UI.Page
 				
 				IsAppNameNeed = false;	
 				
-				string urlImgLogo = Request.Url.Scheme + Uri.SchemeDelimiter +Request.Url.Host + "/css/" + OrgCode + "-css/Logo-Pdf-Print.jpg";
+				string urlImgLogo = (Request.Url.ToString().ToLower().Contains("/demo/") ? "http" : Request.Url.Scheme) + Uri.SchemeDelimiter +Request.Url.Host + "/css/" + OrgCode + "-css/Logo-Pdf-Print.jpg";
 				
 				ShowTocPageNumbers = tocNumbers;
 				
