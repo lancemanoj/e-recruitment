@@ -282,10 +282,16 @@ public partial class GeneratePDF : System.Web.UI.Page
 					tocNumbers = String.IsNullOrEmpty(Request.QueryString["tocnumbers"]) ? tocNumbers : (Request.QueryString["tocnumbers"] == "Yes" ? true : false);
 				}
 				
-				IsAppNameNeed = false;	
-				
-				string urlImgLogo = (Request.Url.ToString().ToLower().Contains("/demo/") ? "http" : Request.Url.Scheme) + Uri.SchemeDelimiter +Request.Url.Host + "/css/" + OrgCode + "-css/Logo-Pdf-Print.jpg";
-				
+				IsAppNameNeed = false;
+
+                string urlImgLogo = "http" + Uri.SchemeDelimiter + Request.Url.Host + "/css/" + OrgCode + "-css/Logo-Pdf-Print.jpg";
+                if (Request.Url.Host.Contains("/demo/"))
+                {
+                    urlImgLogo = "http" + Uri.SchemeDelimiter + Request.Url.Host + "/css/" + OrgCode + "-css/Logo-Pdf-Print.jpg";
+                }
+                //Response.Write(urlImgLogo.ToString() + InfoPage +multi);
+                //Response.Flush();
+                //Response.End();
 				ShowTocPageNumbers = tocNumbers;
 				
 				string stringWithHTMLTags = "";
