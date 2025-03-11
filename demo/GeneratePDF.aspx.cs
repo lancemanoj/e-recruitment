@@ -548,7 +548,7 @@ public partial class GeneratePDF : System.Web.UI.Page
 							Paragraph paragraph = new Paragraph();
 							Anchor anchor1 = new Anchor(Test , FontFactory.GetFont("Arial", 13, Font.BOLD));
 							//anchor1.Reference = "http://itextsharp.sourceforge.net";
-							anchor1.Name = Test;
+                            anchor1.Name = "Applicant_" + Cont;
 							paragraph.SpacingAfter = -11;
 							paragraph.Alignment = Element.ALIGN_CENTER;
 							paragraph.Add(anchor1);
@@ -561,11 +561,11 @@ public partial class GeneratePDF : System.Web.UI.Page
 							_doc.Add(subsection1);
 							
 							string pagenumber = _pdfWriter.CurrentPageNumber.ToString();
-							
-							if(multi && Cont % 2 == 0)
-								_contentsTable1.Add(new TableOfContentsEntry(Test,Test,pagenumber, ((tocNumbers && candsCount > 0) ? Cont + "/" + candsCount : "")));
-							else
-								_contentsTable.Add(new TableOfContentsEntry(Test,Test,pagenumber, ((tocNumbers && candsCount > 0) ? Cont + "/" + candsCount : "")));
+
+                            if (multi && Cont % 2 == 0)
+                                _contentsTable1.Add(new TableOfContentsEntry("Applicant_" + Cont, Test, pagenumber, ((tocNumbers && candsCount > 0) ? Cont + "/" + candsCount : "")));
+                            else
+                                _contentsTable.Add(new TableOfContentsEntry("Applicant_" + Cont, Test, pagenumber, ((tocNumbers && candsCount > 0) ? Cont + "/" + candsCount : "")));
 						}
 						else if (Test2 != String.Empty)
 						{
@@ -578,7 +578,8 @@ public partial class GeneratePDF : System.Web.UI.Page
 							else						
 								anchor1 = new Anchor(Test3, FontFactory.GetFont("Arial", 10, Font.BOLD, BaseColor.WHITE));
 							//anchor1.Reference = "http://itextsharp.sourceforge.net";
-							anchor1.Name = Test2 + Test3;						
+                            string uniqueAnchorName = "Section_" + Cont + "_" + Test3.Replace(" ", "_");  // Previously "Test2 + Test3"
+                            anchor1.Name = uniqueAnchorName;					
 							paragraph.Add(anchor1);
 							PdfPTable table = new PdfPTable(4);
 							table.HorizontalAlignment = 0;
@@ -606,11 +607,11 @@ public partial class GeneratePDF : System.Web.UI.Page
 							_doc.Add(subSubSection);
 
 							string pagenumber = _pdfWriter.CurrentPageNumber.ToString();
-							
-							if(multi && Cont % 2 == 0)
-								_contentsTable1.Add(new TableOfContentsEntry(Test2+Test3, Test3, pagenumber ));
-							else
-								_contentsTable.Add(new TableOfContentsEntry(Test2+Test3, Test3, pagenumber));	 
+                           
+                            if (multi && Cont % 2 == 0)
+                                _contentsTable1.Add(new TableOfContentsEntry(uniqueAnchorName, Test3, pagenumber));
+                            else
+                                _contentsTable.Add(new TableOfContentsEntry(uniqueAnchorName, Test3, pagenumber));	 
 						}
 						else
 						{
@@ -1314,10 +1315,10 @@ public partial class GeneratePDF : System.Web.UI.Page
 						
 						break;
 					}					
-				}				
+				}
 
-				anchor2 = new Anchor(Head, FontFactory.GetFont(FontFactory.HELVETICA, 7, Font.NORMAL));                
-				anchor2.Reference = "#" + content.TitleFull;
+                anchor2 = new Anchor(Head, FontFactory.GetFont(FontFactory.HELVETICA, 7, Font.NORMAL));
+                anchor2.Reference = "#" + content.TitleFull;  // Previously "# + content.TitleFull" but now explicitly using unique name
 				Paragraph paragraph2 = new Paragraph("", FontFactory.GetFont(FontFactory.HELVETICA, 7, Font.NORMAL));
 				paragraph2.Add(anchor2);
 								
